@@ -82,7 +82,18 @@
     (setq deft-use-filename-as-title t)))
 
 (use-package magit
-  :ensure t)
+  :ensure t
+  :bind
+  (("C-x g") . magit-status))
+(use-package sly
+  :init
+  (progn
+    (add-hook 'lisp-mode-hook 'sly-editing-mode)
+    (add-hook 'sly-mode-hook 'sly-company-mode)
+    (add-to-list 'company-backends 'sly-company))
+  :config
+  (progn
+    (setq inferior-lisp-program "/usr/bin/sbcl")))
 ;;varmistaa, että $PATH luetaan shellistä
 (use-package exec-path-from-shell
   :ensure t
@@ -318,6 +329,7 @@
 (setq org-default-notes-file "~/organizer.org")
 (setq org-agenda-files '("~/Workdocuments/"))
 (setq org-refile-targets '((org-agenda-files . (:maxlevel . 9))))
+(setq TeX-PDF-mode t) ;huolehdi, että latex käännetään aina pdflatexilla
 
 ;näytä vastinsulje minibufferissa
 (defadvice show-paren-function
