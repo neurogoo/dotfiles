@@ -28,10 +28,9 @@
   :init
   (use-package powerline)
   :config
-  (progn
-    (moe-dark)
-    (powerline-moe-theme)
-    (moe-theme-set-color 'orange)))
+  (moe-dark)
+  (powerline-moe-theme)
+  (moe-theme-set-color 'orange))
 (use-package web-mode
   :config
   ;;avaa html tiedostot web-moodissa
@@ -73,19 +72,21 @@
 (use-package ivy
   :ensure t
   :bind (("M-x" . counsel-M-x)
+	 ("C-c C-s" . isearch-forward)
          ("C-s" . swiper))
   :init
   (setq ivy-use-virtual-buffers t)
+  (setq ivy-display-style nil)
+  (use-package smex :ensure t)
+  (use-package counsel :ensure t)
+  (use-package flx
+    :ensure t
+    :config
+    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))))
   :config
-  (progn
-    (ivy-mode 1)
-    (setq ivy-extra-directories nil) ;do not show ./ and .//
-    (use-package smex :ensure t)
-    (use-package counsel :ensure t)
-    (use-package flx
-      :ensure t
-      :config
-      (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))))))
+  (ivy-mode 1)
+  (setq ivy-extra-directories nil)) ;do not show ./ and .//
+
 (use-package restclient)
 (use-package deft
   :init
