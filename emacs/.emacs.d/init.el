@@ -12,6 +12,10 @@
 (setq use-package-verbose t)
 (require 'use-package)
 (use-package smartparens
+  :ensure t
+  :init
+  (add-hook 'clojure-mode-hook 'smartparens-mode)
+  (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
   :config
   (progn
     (require 'smartparens-config)))
@@ -41,9 +45,18 @@
   :ensure t
   :config
   (elfeed-org))
+(use-package cider
+  :init
+  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+  (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
+  (add-hook 'cider-mode-hook 'eldoc-mode))
 (use-package elfeed
   :ensure t
   :bind (("C-x w" . elfeed)))
+(use-package rainbow-delimiters
+  :ensure t
+  :init
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
 ;;helm moodi päälle aina
 (use-package helm
   ;;:ensure t
@@ -68,7 +81,7 @@
     (ivy-mode 1)
     (setq ivy-extra-directories nil) ;do not show ./ and .//
     (use-package smex :ensure t)
-    (use-package counsel)
+    (use-package counsel :ensure t)
     (use-package flx
       :ensure t
       :config
