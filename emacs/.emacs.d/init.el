@@ -44,6 +44,11 @@
   :ensure t
   :config
   (elfeed-org))
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode))
 (use-package cider
   :init
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
