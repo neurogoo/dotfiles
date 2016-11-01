@@ -223,15 +223,27 @@
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
 
+(if (daemonp)
+    (progn
+      (add-hook 'after-make-frame-functions (lambda (frame)
+					      (when (display-graphic-p frame)
+						(menu-bar-mode -1)
+						(tool-bar-mode -1)
+						(scroll-bar-mode -1))
+					      (show-paren-mode 1)
+					      (setq show-paren-style 'expressions))))
+  (progn
+    (menu-bar-mode -1) 
+    (tool-bar-mode -1) 
+    (scroll-bar-mode -1)
+    (show-paren-mode 1)
+    ;highlight between ()
+    (setq show-paren-style 'expression))) 
+
 (setq-default indent-tabs-mode nil) ;emacs käyttää tabulaattorin sijasta välilyöntiä
 (setq tab-width 4) ;näytä kaikki sarkaimet 4 välilyön kokoisina
 (which-function-mode 1) ;näytä alarivillä missä funktiossa kursori tällä hetkellä on
-(menu-bar-mode -1) ;poista ylämenurivi
-(tool-bar-mode -1) ;poista työkalurivi
-(scroll-bar-mode -1) ;poista scrollbar
 (setq inhibit-startup-message t) ;poista aloitusscreen
-(show-paren-mode 1) ;näytä suljeparit
-(setq show-paren-style 'expression) ;highligt myös sulkeiden väliselle alueelle
 (setq password-cache-expiry nil) ;tramp ei kysy salasanaa koko ajan
 (setq make-backup-files nil) ;varmista, että Emacs ei tee varmuuskopiotiedostoja. Pidetään serveri näin siistinä
 (custom-set-variables
