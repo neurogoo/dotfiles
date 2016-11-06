@@ -103,7 +103,7 @@
 (use-package magit
   :ensure t
   :bind
-  (("C-x g") . magit-status))
+  (("C-x g" . magit-status)))
 (use-package sly
   :init
   (progn
@@ -132,8 +132,11 @@
     (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT"))
     (setq erc-server-coding-system '(utf-8 . utf-8))
     ;;liity näihin servereihin ja kanaviin automaattisesti käynnistyksen yhteydessä
-    (load "~/.emacs.d/ercinfo.el")
-    (erc-load-info)
+    (let ((erc-data-file  "~/.emacs.d/ercinfo.el"))
+      (if (file-exists-p erc-data-file)
+	  (progn 
+	    (load erc-data-file)
+	    (erc-load-info))))
                                         ;    (add-hook 'erc-mode-hook 'flyspell-mode) ;laita oikeinkirjoitus päälle irkkikanavilla
 
       ;; other random services (spelling)
@@ -194,7 +197,8 @@
     (setq google-translate-output-destination nil)
     (setq google-translate-pop-up-buffer-set-focus t)
     (setq google-translate-translation-directions-alist '(("fi"."en")("en"."fi")))))
-(use-package ob-ipython)
+(use-package ob-ipython
+  :ensure t)
 (add-hook 'js2-mode-hook '(lambda () (linum-mode 1))) ;linum päälle javascript tiedostoissa
 (add-hook 'web-mode-hook '(lambda () (linum-mode 1))) ;linum päälle myös web-moodissa
 (add-hook 'org-mode-hook '(lambda () (hl-line-mode 1))) ;väritä nykyinen rivi org-moodissa
@@ -395,9 +399,10 @@
 ;
 ;(add-hook 'window-setup-hook 'on-after-init)
 (set-face-attribute 'default nil
-                    :family "DejaVu Sans Mono" :height (case system-type
-                                                    ('gnu/linux 130)
-                                                    ('darwin 140)) :weight 'normal)
+                    :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux) 
+                                                           130
+                                                         (if (eq system-type 'darwin)
+                                                             140)) :weight 'normal)
 
 (defun my-web-mode-hook ()
   (setq web-mode-enable-auto-pairing nil))
