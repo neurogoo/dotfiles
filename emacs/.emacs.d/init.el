@@ -159,22 +159,24 @@
          ("C-c a" . org-agenda))
   :config
   (use-package org-protocol
+    :init
+    (setq org-capture-templates
+	  '(
+	    ("b" "Capture link over org-protocol"
+	     entry (file+headline "/Users/toniok/bookmarks.org" "Bookmark inbox")
+	     "** %:description\n   [[%:link][%:link]] \n   CREATED: %U\n\n   %i"
+	     :immediate-finish 1 :empty-lines 1)
+	    ("t" "Capture todo over org-protocol"
+	     entry (file+headline "/Users/toniok/agenda.org" "Future tasks")
+	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
+	     :immediate-finish 1 :empty-lines 1 :prepend t)
+	    ("i" "Capture an idea over org-protocol"
+	     entry (file+headline "/Users/toniok/blog.org" "Ideas")
+	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
+	     :immediate-finish 1 :empty-lines 1 :prepend t))))
   :init
-  (setq org-capture-templates
-        '(
-          ("b" "Capture link over org-protocol"
-           entry (file+headline "/Users/toniok/bookmarks.org" "Bookmark inbox")
-           "** %:description\n   [[%:link][%:link]] \n   CREATED: %U\n\n   %i"
-           :immediate-finish 1 :empty-lines 1)
-          ("t" "Capture todo over org-protocol"
-           entry (file+headline "/Users/toniok/agenda.org" "Future tasks")
-           "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
-           :immediate-finish 1 :empty-lines 1 :prepend t)
-          ("i" "Capture an idea over org-protocol"
-           entry (file+headline "/Users/toniok/blog.org" "Ideas")
-           "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
-           :immediate-finish 1 :empty-lines 1 :prepend t)
-          ))))
+  (setq org-confirm-babel-evaluate nil)
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append))
 (use-package cperl-mode
   :init
   (progn
