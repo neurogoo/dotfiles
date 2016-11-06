@@ -192,7 +192,7 @@
     (setq google-translate-output-destination nil)
     (setq google-translate-pop-up-buffer-set-focus t)
     (setq google-translate-translation-directions-alist '(("fi"."en")("en"."fi")))))
-
+(use-package ob-ipython)
 (add-hook 'js2-mode-hook '(lambda () (linum-mode 1))) ;linum päälle javascript tiedostoissa
 (add-hook 'web-mode-hook '(lambda () (linum-mode 1))) ;linum päälle myös web-moodissa
 (add-hook 'org-mode-hook '(lambda () (hl-line-mode 1))) ;väritä nykyinen rivi org-moodissa
@@ -208,6 +208,7 @@
  'org-babel-load-languages
  '(;; other Babel languages
    (plantuml . t)
+   (ipython . t)
    (dot . t)))
 
 (setq org-plantuml-jar-path
