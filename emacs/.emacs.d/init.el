@@ -48,7 +48,12 @@
   :ensure t
   :init
   (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'company-mode))
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'python-mode-hook #'company-mode)
+  (use-package company-anaconda
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-anaconda)))
 (use-package cider
   :init
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
@@ -76,9 +81,7 @@
     (setq helm-M-x-fuzzy-match t)))
 (use-package ivy
   :ensure t
-  :bind (("M-x" . counsel-M-x)
-	 ("C-c C-s" . isearch-forward)
-         ("C-s" . swiper))
+  :bind (("M-x" . counsel-M-x))
   :init
   (setq ivy-use-virtual-buffers t)
   (setq ivy-display-style nil)
@@ -157,6 +160,15 @@
 ;    (global-undo-tree-mode)
 ;    (setq undo-tree-visualizer-timestamps t)
                                         ;    (setq undo-tree-visualizer-diff t)))
+(use-package anaconda-mode
+  :init
+  (add-hook 'python-mode-hook 'anaconda-mode)
+  (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
+  (add-hook 'python-mode-hook 'eldoc-mode))
+(use-package yasnippet
+  :ensure t
+  :config
+  (yas-global-mode 1))
 (use-package org
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
