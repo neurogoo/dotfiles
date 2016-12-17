@@ -57,6 +57,8 @@
 (use-package elfeed
   :ensure t
   :bind (("C-x w" . elfeed)))
+(use-package projectile
+  :ensure t)
 (use-package rainbow-delimiters
   :ensure t
   :init
