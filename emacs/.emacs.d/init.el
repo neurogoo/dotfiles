@@ -53,7 +53,8 @@
   (use-package company-anaconda
     :ensure t
     :init
-    (add-to-list 'company-backends 'company-anaconda)))
+    (with-eval-after-load 'company
+      (add-to-list 'company-backends 'company-anaconda))))
 (use-package cider
   :init
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
@@ -63,7 +64,9 @@
   :ensure t
   :bind (("C-x w" . elfeed)))
 (use-package projectile
-  :ensure t)
+  :ensure t
+  :init
+  (setq projectile-completion-system 'ivy))
 (use-package rainbow-delimiters
   :ensure t
   :init
@@ -114,7 +117,8 @@
   (progn
     (add-hook 'lisp-mode-hook 'sly-editing-mode)
     (add-hook 'sly-mode-hook 'sly-company-mode)
-    (add-to-list 'company-backends 'sly-company))
+    (with-eval-after-load 'company
+      (add-to-list 'company-backends 'sly-company)))
   :config
   (progn
     (setq inferior-lisp-program "/usr/bin/sbcl")))
@@ -406,7 +410,7 @@
 ;  (unless (display-graphic-p (selected-frame))
 ;    (set-face-background 'default "unspecified-bg" (selected-frame))))
 
-(add-hook 'window-setup-hook 'on-after-init)
+;(add-hook 'window-setup-hook 'on-after-init)
 ;(defun on-after-init ()
 ;  (unless (display-graphic-p (selected-frame))
 ;    (set-face-background 'default "unspecified-bg" (selected-frame))))
@@ -473,3 +477,9 @@
   (save-some-buffers)
   (kill-emacs)
   )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
