@@ -53,7 +53,14 @@
   (use-package company-anaconda
     :ensure t
     :init
-    (add-to-list 'company-backends 'company-anaconda)))
+    (add-to-list 'company-backends 'company-anaconda))
+  (use-package company-jedi
+    :disabled t
+    :ensure t
+    :init
+    (add-to-list 'company-backends 'company-jedi)))
+(use-package pydoc-info
+  :ensure t)
 (use-package cider
   :init
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
@@ -277,7 +284,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (pydoc-info web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
@@ -471,3 +478,9 @@
   (save-some-buffers)
   (kill-emacs)
   )
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
