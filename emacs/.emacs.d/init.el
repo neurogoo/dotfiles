@@ -44,6 +44,12 @@
   :ensure t
   :config
   (elfeed-org))
+(use-package ledger-mode
+  :ensure t
+  :init
+  (setq ledger-clear-whole-transaction 1)
+  :config
+  :mode "\\.dat\\'")
 (use-package company
   :ensure t
   :init
@@ -292,7 +298,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (pydoc-info web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
