@@ -66,7 +66,8 @@
 (use-package projectile
   :ensure t
   :init
-  (setq projectile-completion-system 'ivy))
+  (setq projectile-completion-system 'ivy)
+  (projectile-global-mode))
 (use-package rainbow-delimiters
   :ensure t
   :init
