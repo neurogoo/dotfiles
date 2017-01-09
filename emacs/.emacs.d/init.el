@@ -79,8 +79,10 @@
   :bind (("C-x w" . elfeed)))
 (use-package projectile
   :ensure t
+  :diminish projectile-mode
   :init
   (setq projectile-completion-system 'ivy)
+  :config
   (projectile-global-mode))
 (use-package rainbow-delimiters
   :ensure t
