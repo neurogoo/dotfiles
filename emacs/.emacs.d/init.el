@@ -16,6 +16,12 @@
   :init
   (add-hook 'clojure-mode-hook 'smartparens-mode)
   (add-hook 'clojure-mode-hook 'smartparens-strict-mode)
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-mode)
+  (add-hook 'emacs-lisp-mode-hook 'smartparens-strict-mode)
+  (add-hook 'lisp-mode-hook 'smartparens-mode)
+  (add-hook 'lisp-mode-hook 'smartparens-strict-mode)
+  (add-hook 'inferior-lisp-mode-hook 'smartparens-mode)
+  (add-hook 'inferior-lisp-mode-hook 'smartparens-strict-mode)
   :config
   (progn
     (require 'smartparens-config)))
