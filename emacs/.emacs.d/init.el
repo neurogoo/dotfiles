@@ -24,7 +24,10 @@
   (add-hook 'inferior-lisp-mode-hook 'smartparens-strict-mode)
   :config
   (progn
-    (require 'smartparens-config)))
+    (require 'smartparens-config)
+    (sp-use-smartparens-bindings)))
+;(setq sml/theme 'respectful)
+                                        ;(sml/setup)
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/Cellar/aspell/0.60.6.1/bin/aspell")
     )
@@ -54,6 +57,10 @@
   (setq ledger-clear-whole-transaction 1)
   :config
   :mode "\\.dat\\'")
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-mode))
 (use-package company
   :ensure t
   :init
@@ -309,7 +316,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (counsel-projectile ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
