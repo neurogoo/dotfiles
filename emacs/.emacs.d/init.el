@@ -25,8 +25,6 @@
   :config
   (progn
     (require 'smartparens-config)))
-;(setq sml/theme 'respectful)
-                                        ;(sml/setup)
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/Cellar/aspell/0.60.6.1/bin/aspell")
     )
@@ -120,6 +118,10 @@
     :config
     (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))))
   :config
+  (use-package counsel-projectile
+    :ensure t
+    :config
+    (counsel-projectile-on))
   (ivy-mode 1)
   (setq ivy-extra-directories nil)) ;do not show ./ and .//
 
@@ -220,6 +222,7 @@
 	     :immediate-finish 1 :empty-lines 1 :prepend t))))
   :init
   (setq org-confirm-babel-evaluate nil)
+  (setq org-clock-idle-time 30)
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append))
 (use-package cperl-mode
   :init
@@ -306,7 +309,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (counsel-projectile ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
