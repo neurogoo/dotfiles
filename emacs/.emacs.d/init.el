@@ -508,8 +508,15 @@
   "Save buffers, Quit, and Shutdown (kill) server"
   (interactive)
   (save-some-buffers)
-  (kill-emacs)
-  )
+  (kill-emacs))
+
+(defun mu-xml-format ()
+  "Format an XML buffer with `xmllint'."
+  (interactive)
+  (shell-command-on-region (point-min) (point-max)
+                           "xmllint -format -"
+                           (current-buffer) t
+                           "*Xmllint Error Buffer*" t))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
