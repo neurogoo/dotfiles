@@ -22,6 +22,8 @@
   (add-hook 'lisp-mode-hook 'smartparens-strict-mode)
   (add-hook 'inferior-lisp-mode-hook 'smartparens-mode)
   (add-hook 'inferior-lisp-mode-hook 'smartparens-strict-mode)
+  (add-hook 'scheme-mode-hook 'smartparens-mode)
+  (add-hook 'scheme-mode-hook 'smartparens-strict-mode)
   :config
   (progn
     (require 'smartparens-config)
@@ -203,6 +205,8 @@
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook 'eldoc-mode))
+(use-package geiser
+  :ensure t)
 (use-package yasnippet
   :ensure t
   :config
@@ -260,6 +264,14 @@
   :init
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode))
 
+(use-package meghanada
+  :ensure t
+  :init
+  ;; Don't auto-start
+  (setq meghanada-auto-start nil)
+  (add-hook 'java-mode-hook #'meghanada-mode)
+  (add-hook 'java-mode-hook 'flycheck-mode))
+
 ;; active Org-babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -316,7 +328,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
