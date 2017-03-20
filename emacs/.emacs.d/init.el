@@ -301,14 +301,16 @@
 						(tool-bar-mode -1)
 						(scroll-bar-mode -1))
 					      (show-paren-mode 1)
-					      (setq show-paren-style 'expressions))))
+					      (setq show-paren-style 'expressions)
+                                              (exec-path-from-shell-initialize))))
   (progn
     (menu-bar-mode -1) 
     (tool-bar-mode -1) 
     (scroll-bar-mode -1)
     (show-paren-mode 1)
     ;highlight between ()
-    (setq show-paren-style 'expression))) 
+    (setq show-paren-style 'expression)
+    (exec-path-from-shell-initialize))) 
 
 (setq-default indent-tabs-mode nil) ;emacs käyttää tabulaattorin sijasta välilyöntiä
 (setq tab-width 4) ;näytä kaikki sarkaimet 4 välilyön kokoisina
