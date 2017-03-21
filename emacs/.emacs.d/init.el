@@ -100,7 +100,10 @@
 (use-package rainbow-delimiters
   :ensure t
   :init
-  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode))
+  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+  (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
 ;;helm moodi päälle aina
 (use-package helm
   ;;:ensure t
@@ -206,7 +209,11 @@
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook 'eldoc-mode))
 (use-package geiser
-  :ensure t)
+  :ensure t
+  :init
+  (add-hook 'geiser-repl-mode-hook 'smartparens-strict-mode)
+                                        ;(add-hook 'geiser-mode-hook 'eldoc-mode)
+  )
 (use-package yasnippet
   :ensure t
   :config
