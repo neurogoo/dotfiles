@@ -89,6 +89,9 @@
   (add-hook 'cider-mode-hook 'eldoc-mode))
 (use-package elfeed
   :ensure t
+  :init
+  (setq elfeed-db-directory "~/Sync/elfeeddb")
+  (setq rmh-elfeed-org-files (list "~/Sync/elfeed.org"))
   :bind (("C-x w" . elfeed)))
 (use-package projectile
   :ensure t
@@ -278,6 +281,8 @@
   (setq meghanada-auto-start nil)
   (add-hook 'java-mode-hook #'meghanada-mode)
   (add-hook 'java-mode-hook 'flycheck-mode))
+(use-package dumb-jump
+  :ensure t)
 
 ;; active Org-babel languages
 (org-babel-do-load-languages
@@ -337,7 +342,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
