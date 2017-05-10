@@ -59,16 +59,35 @@
   (setq ledger-clear-whole-transaction 1)
   :config
   :mode "\\.dat\\'")
+(use-package plantuml-mode
+  :ensure t
+  :mode "\\.plantuml\\'")
 (use-package which-key
   :ensure t
   :config
   (which-key-mode))
+(use-package rust-mode
+  :ensure t
+  :mode "\\.rs\\'"
+  :config
+  (use-package racer
+    :ensure t
+    :init
+    (add-hook 'rust-mode-hook #'racer-mode)
+    (add-hook 'racer-mode-hook #'eldoc-mode)
+    (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
+    (setq company-tooltip-align-annotations t))
+  (use-package flycheck-rust
+    :ensure t
+    :init
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
 (use-package company
   :ensure t
   :init
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'python-mode-hook #'company-mode)
+  (add-hook 'emacs-lisp-mode-hook #'company-mode)
   (use-package company-anaconda
     :ensure t
     :init
@@ -342,7 +361,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
