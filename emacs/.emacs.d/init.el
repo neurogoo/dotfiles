@@ -11,6 +11,10 @@
 ;;(setq-default symon-monitors '(symon-linux-memory-monitor symon-linux-cpu-monitor symon-windows-network-rx-monitor symon-windows-network-tx-monitor))
 (setq use-package-verbose t)
 (require 'use-package)
+(use-package flycheck
+  :ensure t
+  :init
+  (global-flycheck-mode t))
 (use-package smartparens
   :ensure t
   :init
@@ -69,6 +73,8 @@
 (use-package rust-mode
   :ensure t
   :mode "\\.rs\\'"
+  :init
+  (add-hook 'rust-mode-hook #'smartparens-mode)
   :config
   (use-package racer
     :ensure t
