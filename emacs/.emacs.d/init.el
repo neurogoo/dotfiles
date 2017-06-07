@@ -14,7 +14,12 @@
 (use-package flycheck
   :ensure t
   :init
-  (global-flycheck-mode t))
+  (global-flycheck-mode t)
+  :config
+  (use-package flycheck-plantuml
+    :ensure t
+    :config
+    (flycheck-plantuml-setup)))
 (use-package smartparens
   :ensure t
   :init
