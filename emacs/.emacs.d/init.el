@@ -210,15 +210,7 @@
     ;;poista joistakin viesteistä ilmoittaminen ERC moodista
     (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT"))
     (setq erc-server-coding-system '(utf-8 . utf-8))
-    ;;liity näihin servereihin ja kanaviin automaattisesti käynnistyksen yhteydessä
-    (let ((erc-data-file  "~/.emacs.d/ercinfo.el"))
-      (if (file-exists-p erc-data-file)
-	  (progn 
-	    (load erc-data-file)
-	    (erc-load-info))))
-                                        ;    (add-hook 'erc-mode-hook 'flyspell-mode) ;laita oikeinkirjoitus päälle irkkikanavilla
-
-      ;; other random services (spelling)
+    ;; other random services (spelling)
     (use-package erc-services
       :init
       (progn
@@ -226,6 +218,13 @@
         (add-to-list 'erc-modules 'spelling)
         (erc-services-mode 1)
         (erc-spelling-mode 1)))
+    ;;liity näihin servereihin ja kanaviin automaattisesti käynnistyksen yhteydessä
+    (let ((erc-data-file  "~/.emacs.d/ercinfo.el"))
+      (if (file-exists-p erc-data-file)
+	  (progn 
+	    (load erc-data-file)
+	    (erc-load-info))))
+                                        ;    (add-hook 'erc-mode-hook 'flyspell-mode) ;laita oikeinkirjoitus päälle irkkikanavilla
     (erc-update-modules)
     ))
 ;;näytä emacsin undo-toiminto visuaalisempana
@@ -372,7 +371,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
