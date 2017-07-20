@@ -11,6 +11,8 @@
 ;;(setq-default symon-monitors '(symon-linux-memory-monitor symon-linux-cpu-monitor symon-windows-network-rx-monitor symon-windows-network-tx-monitor))
 (setq use-package-verbose t)
 (require 'use-package)
+(use-package eldoc
+  :diminish eldoc-mode)
 (use-package flycheck
   :ensure t
   :init
@@ -99,6 +101,7 @@
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'python-mode-hook #'company-mode)
   (add-hook 'emacs-lisp-mode-hook #'company-mode)
+  (add-hook 'rust-mode-hook #'company-mode)
   (use-package company-anaconda
     :ensure t
     :init
@@ -503,12 +506,19 @@
 ;  (unless (display-graphic-p (selected-frame))
 ;    (set-face-background 'default "unspecified-bg" (selected-frame))))
 ;
-;(add-hook 'window-setup-hook 'on-after-init)
-(set-face-attribute 'default nil
+                                        ;(add-hook 'window-setup-hook 'on-after-init)
+
+(cond
+ ((find-font (font-spec :name "Iosevka")) (set-face-attribute 'default nil
+                    :family "Iosevka" :height (if (eq system-type 'gnu/linux) 
+                                                           130
+                                                         (if (eq system-type 'darwin)
+                                                             140)) :weight 'normal))
+ ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux) 
                                                            130
                                                          (if (eq system-type 'darwin)
-                                                             140)) :weight 'normal)
+                                                             140)) :weight 'normal)))
 
 (defun my-web-mode-hook ()
   (setq web-mode-enable-auto-pairing nil))
