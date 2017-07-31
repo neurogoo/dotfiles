@@ -213,6 +213,7 @@
     ;;poista joistakin viesteistä ilmoittaminen ERC moodista
     (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT"))
     (setq erc-server-coding-system '(utf-8 . utf-8))
+    (setq erc-join-buffer 'bury)
     ;; other random services (spelling)
     (use-package erc-services
       :init
