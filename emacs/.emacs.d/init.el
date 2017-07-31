@@ -514,7 +514,7 @@
                     :family "Iosevka" :height (if (eq system-type 'gnu/linux) 
                                                            130
                                                          (if (eq system-type 'darwin)
-                                                             140)) :weight 'normal))
+                                                             145)) :weight 'normal))
  ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux) 
                                                            130
