@@ -42,7 +42,7 @@
 ;(setq sml/theme 'respectful)
                                         ;(sml/setup)
 (if (eq system-type 'darwin)
-    (setq ispell-program-name "/usr/local/Cellar/aspell/0.60.6.1/bin/aspell")
+    (setq ispell-program-name "/usr/local/bin/aspell")
     )
 (use-package moe-theme
   :init
@@ -50,7 +50,9 @@
   :config
   (moe-dark)
   (powerline-moe-theme)
-  (moe-theme-set-color 'orange))
+  (if (eq system-type 'darwin)
+      (moe-theme-set-color 'purple)
+    (moe-theme-set-color 'orange)))
 (use-package web-mode
   :config
   ;;avaa html tiedostot web-moodissa
@@ -323,7 +325,8 @@
  '(;; other Babel languages
    (plantuml . t)
    (ipython . t)
-   (dot . t)))
+   (dot . t)
+   (shell . t)))
 
 (setq org-plantuml-jar-path
       (expand-file-name "~/plantuml.jar"))
