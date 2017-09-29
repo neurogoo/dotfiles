@@ -53,6 +53,26 @@
   (if (eq system-type 'darwin)
       (moe-theme-set-color 'purple)
     (moe-theme-set-color 'orange)))
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (progn
+    (setq treemacs-follow-after-init          t
+          treemacs-width                      35
+          treemacs-indentation                2
+          treemacs-git-integration            t
+          treemacs-collapse-dirs              3
+          treemacs-silent-refresh             nil
+          treemacs-change-root-without-asking nil
+          treemacs-sorting                    'alphabetic-desc
+          treemacs-show-hidden-files          t
+          treemacs-never-persist              nil
+          treemacs-is-never-other-window      nil
+          treemacs-goto-tag-strategy          'refetch-index)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)))
 (use-package web-mode
   :config
   ;;avaa html tiedostot web-moodissa
@@ -378,7 +398,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (treemacs flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
