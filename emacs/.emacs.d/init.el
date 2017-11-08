@@ -262,10 +262,15 @@
 ;    (setq undo-tree-visualizer-timestamps t)
                                         ;    (setq undo-tree-visualizer-diff t)))
 (use-package anaconda-mode
+  :ensure t
   :init
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook 'eldoc-mode))
+(use-package nose
+  :ensure t)
+(use-package racket-mode
+  :ensure t)
 (use-package geiser
   :ensure t
   :init
@@ -296,6 +301,15 @@
 	     entry (file+headline "/Users/toniok/blog.org" "Ideas")
 	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
 	     :immediate-finish 1 :empty-lines 1 :prepend t))))
+  (use-package org-present
+    :ensure t)
+  (use-package ox-pandoc
+    :ensure t
+    :config
+    (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))))
+  (use-package ox-reveal
+    :config
+    (setq org-reveal-root "file:///Users/toniok/Downloads/reveal.js-3.5.0/"))
   :init
   (setq org-confirm-babel-evaluate nil)
   (setq org-clock-idle-time 30)
@@ -398,7 +412,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (treemacs flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (htmlize ox-reveal nose racket-mode ox-pandoc frame-cmds org-present treemacs flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
