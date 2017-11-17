@@ -42,7 +42,7 @@
 ;(setq sml/theme 'respectful)
                                         ;(sml/setup)
 (if (eq system-type 'darwin)
-    (setq ispell-program-name "/usr/local/Cellar/aspell/0.60.6.1/bin/aspell")
+    (setq ispell-program-name "/usr/local/bin/aspell")
     )
 (use-package moe-theme
   :init
@@ -50,7 +50,29 @@
   :config
   (moe-dark)
   (powerline-moe-theme)
-  (moe-theme-set-color 'orange))
+  (if (eq system-type 'darwin)
+      (moe-theme-set-color 'purple)
+    (moe-theme-set-color 'orange)))
+(use-package treemacs
+  :ensure t
+  :defer t
+  :config
+  (progn
+    (setq treemacs-follow-after-init          t
+          treemacs-width                      35
+          treemacs-indentation                2
+          treemacs-git-integration            t
+          treemacs-collapse-dirs              3
+          treemacs-silent-refresh             nil
+          treemacs-change-root-without-asking nil
+          treemacs-sorting                    'alphabetic-desc
+          treemacs-show-hidden-files          t
+          treemacs-never-persist              nil
+          treemacs-is-never-other-window      nil
+          treemacs-goto-tag-strategy          'refetch-index)
+
+    (treemacs-follow-mode t)
+    (treemacs-filewatch-mode t)))
 (use-package web-mode
   :config
   ;;avaa html tiedostot web-moodissa
@@ -217,6 +239,7 @@
     ;;poista joistakin viesteistä ilmoittaminen ERC moodista
     (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT"))
     (setq erc-server-coding-system '(utf-8 . utf-8))
+    (setq erc-join-buffer 'bury)
     ;; other random services (spelling)
     (use-package erc-services
       :init
@@ -243,10 +266,15 @@
 ;    (setq undo-tree-visualizer-timestamps t)
                                         ;    (setq undo-tree-visualizer-diff t)))
 (use-package anaconda-mode
+  :ensure t
   :init
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook 'eldoc-mode))
+(use-package nose
+  :ensure t)
+(use-package racket-mode
+  :ensure t)
 (use-package geiser
   :ensure t
   :init
@@ -277,6 +305,15 @@
 	     entry (file+headline "/Users/toniok/blog.org" "Ideas")
 	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
 	     :immediate-finish 1 :empty-lines 1 :prepend t))))
+  (use-package org-present
+    :ensure t)
+  (use-package ox-pandoc
+    :ensure t
+    :config
+    (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))))
+  (use-package ox-reveal
+    :config
+    (setq org-reveal-root "file:///Users/toniok/Downloads/reveal.js-3.5.0/"))
   :init
   (setq org-confirm-babel-evaluate nil)
   (setq org-clock-idle-time 30)
@@ -326,7 +363,8 @@
  '(;; other Babel languages
    (plantuml . t)
    (ipython . t)
-   (dot . t)))
+   (dot . t)
+   (shell . t)))
 
 (setq org-plantuml-jar-path
       (expand-file-name "~/plantuml.jar"))
@@ -378,7 +416,11 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
+<<<<<<< HEAD
     (ox-pandoc racket-mode cargo flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+=======
+    (htmlize ox-reveal nose racket-mode ox-pandoc frame-cmds org-present treemacs flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+>>>>>>> 82d9afdf00bcf2fefac754745a5d845f8749070b
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
@@ -517,7 +559,7 @@
                     :family "Iosevka" :height (if (eq system-type 'gnu/linux) 
                                                            130
                                                          (if (eq system-type 'darwin)
-                                                             140)) :weight 'normal))
+                                                             145)) :weight 'normal))
  ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux) 
                                                            130
