@@ -94,6 +94,10 @@
     :ensure t
     :init
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+(use-package cargo
+  :ensure t
+  :init
+  (add-hook 'rust-mode-hook 'cargo-minor-mode))
 (use-package company
   :ensure t
   :init
@@ -374,7 +378,7 @@
  '(org-enforce-todo-dependencies t)
  '(package-selected-packages
    (quote
-    (flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
+    (ox-pandoc racket-mode cargo flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
  '(send-mail-function (quote mailclient-send-it))
  '(sml/mode-width
    (if
@@ -582,6 +586,17 @@
                            "xmllint -format -"
                            (current-buffer) t
                            "*Xmllint Error Buffer*" t))
+(autoload 'notmuch "notmuch" "Notmuch mail" t)
+(require 'notmuch)
+(defun notmuch-get-date (date)
+  "Converts a date for notmuch processing"
+  (substring (shell-command-to-string (concat "date --date=\"" date "\" +%s")) 0 -1))
+(defun notmuch-today ()
+  "Shows today's mail"
+  (interactive)
+  (notmuch-search
+   (concat
+    (notmuch-get-date "today 0") ".." (notmuch-get-date "now"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
