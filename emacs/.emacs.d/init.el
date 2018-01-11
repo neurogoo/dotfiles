@@ -4,6 +4,7 @@
   (package-initialize)
   (add-to-list 'package-archives
 	       '("melpa" . "http://melpa.milkbox.net/packages/") t)
+  (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
   )
 ;(add-to-list 'load-path "~/.emacs.d/symon-master/")
 ;;poistetaan toistaiseksi symon käytöstä
@@ -22,6 +23,26 @@
     :ensure t
     :config
     (flycheck-plantuml-setup)))
+(use-package company
+  :ensure t
+  :init
+  (add-hook 'cider-repl-mode-hook #'company-mode)
+  (add-hook 'cider-mode-hook #'company-mode)
+  (add-hook 'python-mode-hook #'company-mode)
+  (add-hook 'emacs-lisp-mode-hook #'company-mode)
+  (add-hook 'rust-mode-hook #'company-mode)
+  (add-hook 'haskell-mode-hook #'company-mode)
+  (use-package company-anaconda
+    :ensure t
+    :init
+    (with-eval-after-load 'company
+      (add-to-list 'company-backends 'company-anaconda)))
+  (use-package company-jedi
+    :disabled t
+    :ensure t
+    :init
+    (with-eval-after-load 'company
+      (add-to-list 'company-backends 'company-jedi))))
 (use-package smartparens
   :ensure t
   :init
@@ -41,12 +62,26 @@
     (sp-use-smartparens-bindings)))
 ;(setq sml/theme 'respectful)
                                         ;(sml/setup)
+(use-package dante
+  :ensure t
+  :after haskell-mode
+  :commands 'dante-mode
+  :init
+  (add-hook 'haskell-mode-hook 'dante-mode)
+  (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (custom-set-variables '(haskell-stylish-on-save t))
+  (add-hook 'dante-mode-hook
+            '(lambda () (flycheck-add-next-checker 'haskell-dante
+                                                   '(warning . haskell-hlint)))))
+
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/bin/aspell")
     )
 (use-package moe-theme
+  :ensure t
   :init
-  (use-package powerline)
+  (use-package powerline
+    :ensure t)
   :config
   (moe-dark)
   (powerline-moe-theme)
@@ -73,15 +108,6 @@
 
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)))
-(use-package web-mode
-  :config
-  ;;avaa html tiedostot web-moodissa
-  (progn
-    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
-    ;;webmode olettaa, että template toolkit on käytössä tavallisilla html tiedostoilla
-    (setq web-mode-engines-alist
-          '(("template-toolkit"    . "\\.html\\'"))
-          )))
 (use-package elfeed-org
   :ensure t
   :config
@@ -120,28 +146,10 @@
   :ensure t
   :init
   (add-hook 'rust-mode-hook 'cargo-minor-mode))
-(use-package company
-  :ensure t
-  :init
-  (add-hook 'cider-repl-mode-hook #'company-mode)
-  (add-hook 'cider-mode-hook #'company-mode)
-  (add-hook 'python-mode-hook #'company-mode)
-  (add-hook 'emacs-lisp-mode-hook #'company-mode)
-  (add-hook 'rust-mode-hook #'company-mode)
-  (use-package company-anaconda
-    :ensure t
-    :init
-    (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-anaconda)))
-  (use-package company-jedi
-    :disabled t
-    :ensure t
-    :init
-    (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-jedi))))
 (use-package pydoc-info
   :ensure t)
 (use-package cider
+  :ensure t
   :init
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
   (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
@@ -199,8 +207,10 @@
   (ivy-mode 1)
   (setq ivy-extra-directories nil)) ;do not show ./ and .//
 
-(use-package restclient)
+(use-package restclient
+  :disabled)
 (use-package deft
+  :ensure t
   :init
   (progn
     (setq deft-extension "org")
@@ -212,6 +222,7 @@
   :bind
   (("C-x g" . magit-status)))
 (use-package sly
+  :disabled
   :init
   (progn
     (add-hook 'lisp-mode-hook 'sly-editing-mode)
@@ -286,6 +297,7 @@
   :config
   (yas-global-mode 1))
 (use-package org
+  :ensure t
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
   :config
@@ -304,7 +316,8 @@
 	    ("i" "Capture an idea over org-protocol"
 	     entry (file+headline "/Users/toniok/blog.org" "Ideas")
 	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
-	     :immediate-finish 1 :empty-lines 1 :prepend t))))
+	     :immediate-finish 1 :empty-lines 1 :prepend t)))
+    (setq org-enforce-todo-dependencies t))
   (use-package org-present
     :ensure t)
   (use-package ox-pandoc
@@ -312,6 +325,7 @@
     :config
     (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))))
   (use-package ox-reveal
+    :disabled
     :config
     (setq org-reveal-root "file:///Users/toniok/Downloads/reveal.js-3.5.0/"))
   :init
@@ -404,91 +418,6 @@
 (setq inhibit-startup-message t) ;poista aloitusscreen
 (setq password-cache-expiry nil) ;tramp ei kysy salasanaa koko ajan
 (setq make-backup-files nil) ;varmista, että Emacs ei tee varmuuskopiotiedostoja. Pidetään serveri näin siistinä
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("dbb643699e18b5691a8baff34c29d709a3ff9787f09cdae58d3c1bc085b63c25" "32e3693cd7610599c59997fee36a68e7dd34f21db312a13ff8c7e738675b6dfc" "0e219d63550634bc5b0c214aced55eb9528640377daf486e13fb18a32bf39856" "0c311fb22e6197daba9123f43da98f273d2bfaeeaeb653007ad1ee77f0003037" "8db4b03b9ae654d4a57804286eb3e332725c84d7cdab38463cb6b97d5762ad26" "c74e83f8aa4c78a121b52146eadb792c9facc5b1f02c917e3dbb454fca931223" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "26614652a4b3515b4bbbb9828d71e206cc249b67c9142c06239ed3418eff95e2" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a8245b7cc985a0610d71f9852e9f2767ad1b852c2bdea6f4aadc12cce9c4d6d0" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" default)))
- '(markdown-command "/usr/local/bin/pandoc")
- '(org-enforce-todo-dependencies t)
- '(package-selected-packages
-   (quote
-<<<<<<< HEAD
-    (ox-pandoc racket-mode cargo flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
-=======
-    (htmlize ox-reveal nose racket-mode ox-pandoc frame-cmds org-present treemacs flycheck-plantuml racer flycheck-rust rust-mode plantuml-mode dumb-jump geiser meghanada which-key ledger-mode web-mode js2-mode restclient elfeed-org elfeed smex flx exec-path-from-shell magit powerline moe-theme zenburn-theme noctilux-theme use-package solarized-theme smartparens php-mode paredit markdown-mode lua-mode helm groovy-mode deft color-theme-solarized cider)))
->>>>>>> 82d9afdf00bcf2fefac754745a5d845f8749070b
- '(send-mail-function (quote mailclient-send-it))
- '(sml/mode-width
-   (if
-       (eq powerline-default-separator
-           (quote arrow))
-       (quote right)
-     (quote full)))
- '(sml/pos-id-separator
-   (quote
-    (""
-     (:propertize " " face powerline-active1)
-     (:eval
-      (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s" powerline-default-separator
-                            (car powerline-default-separator-dir)))
-                   (quote powerline-active1)
-                   (quote powerline-active2))))
-     (:propertize " " face powerline-active2))))
- '(sml/pos-minor-modes-separator
-   (quote
-    (""
-     (:propertize " " face powerline-active1)
-     (:eval
-      (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s" powerline-default-separator
-                            (cdr powerline-default-separator-dir)))
-                   (quote powerline-active1)
-                   nil)))
-     (:propertize " " face sml/global))))
- '(sml/pre-id-separator
-   (quote
-    (""
-     (:propertize " " face sml/global)
-     (:eval
-      (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s" powerline-default-separator
-                            (car powerline-default-separator-dir)))
-                   nil
-                   (quote powerline-active1))))
-     (:propertize " " face powerline-active1))))
- '(sml/pre-minor-modes-separator
-   (quote
-    (""
-     (:propertize " " face powerline-active2)
-     (:eval
-      (propertize " "
-                  (quote display)
-                  (funcall
-                   (intern
-                    (format "powerline-%s-%s" powerline-default-separator
-                            (cdr powerline-default-separator-dir)))
-                   (quote powerline-active2)
-                   (quote powerline-active1))))
-     (:propertize " " face powerline-active1))))
- '(sml/pre-modes-separator (propertize " " (quote face) (quote sml/modes)))
- '(tab-stop-list
-   (quote
-    (4 8 12 16 20 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100 104 108 112 116 120)))
- '(which-function-mode t))
 
 ;;aktivoi uusi javascript moodi
 (add-hook 'js-mode-hook 'js2-minor-mode)
