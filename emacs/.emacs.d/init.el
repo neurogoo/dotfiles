@@ -88,6 +88,13 @@
   (if (eq system-type 'darwin)
       (moe-theme-set-color 'purple)
     (moe-theme-set-color 'orange)))
+(use-package markdown-mode
+  :ensure t
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 (use-package treemacs
   :ensure t
   :defer t
