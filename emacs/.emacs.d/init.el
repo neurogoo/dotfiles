@@ -56,12 +56,21 @@
   (add-hook 'inferior-lisp-mode-hook 'smartparens-strict-mode)
   (add-hook 'scheme-mode-hook 'smartparens-mode)
   (add-hook 'scheme-mode-hook 'smartparens-strict-mode)
+  (add-hook 'haskell-mode-hook 'smartparens-mode)
   :config
   (progn
     (require 'smartparens-config)
     (sp-use-smartparens-bindings)))
 ;(setq sml/theme 'respectful)
                                         ;(sml/setup)
+(defun haskell-style ()
+  "Sets the current buffer to use Haskell Style. Meant to be
+  added to `haskell-mode-hook'"
+  (interactive)
+  (setq tab-width 4
+        haskell-indentation-layout-offset 4
+        haskell-indentation-left-offset 4
+        haskell-indentation-ifte-offset 4))
 (use-package dante
   :ensure t
   :after haskell-mode
@@ -69,7 +78,9 @@
   :init
   (add-hook 'haskell-mode-hook 'dante-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode)
+  (add-hook 'haskell-mode-hook 'haskell-style)
   (custom-set-variables '(haskell-stylish-on-save t))
+  (setq dante-repl-command-line '("cabal" "new-repl" dante-target))
   (add-hook 'dante-mode-hook
             '(lambda () (flycheck-add-next-checker 'haskell-dante
                                                    '(warning . haskell-hlint)))))
@@ -327,6 +338,7 @@
   (use-package org-present
     :ensure t)
   (use-package ox-pandoc
+    :disabled
     :ensure t
     :config
     (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))))
