@@ -209,8 +209,7 @@
   :config
   (use-package counsel-projectile
     :ensure t
-    :config
-    (counsel-projectile-on))
+    :hook (haskell-mode))
   (ivy-mode 1)
   (setq ivy-extra-directories nil)) ;do not show ./ and .//
 
