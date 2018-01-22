@@ -349,7 +349,10 @@
   :init
   (setq org-confirm-babel-evaluate nil)
   (setq org-clock-idle-time 30)
-  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append))
+  (setq org-default-notes-file "~/notes.org")
+  (setq org-agenda-files '("~/Workdocuments/"))
+  (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+  (add-hook 'org-mode-hook '(lambda () (hl-line-mode 1)))) ;väritä nykyinen rivi org-moodissa
 (use-package cperl-mode
   :init
   (progn
@@ -371,7 +374,6 @@
   :ensure t)
 (add-hook 'js2-mode-hook '(lambda () (linum-mode 1))) ;linum päälle javascript tiedostoissa
 (add-hook 'web-mode-hook '(lambda () (linum-mode 1))) ;linum päälle myös web-moodissa
-(add-hook 'org-mode-hook '(lambda () (hl-line-mode 1))) ;väritä nykyinen rivi org-moodissa
 (add-hook 'c++-mode-hook '(lambda () (linum-mode 1)))
 (use-package paredit
   :disabled t
