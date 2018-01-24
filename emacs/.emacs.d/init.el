@@ -372,6 +372,8 @@
     (setq google-translate-translation-directions-alist '(("fi"."en")("en"."fi")))))
 (use-package ob-ipython
   :ensure t)
+(use-package json-mode
+  :ensure t)
 (add-hook 'js2-mode-hook '(lambda () (linum-mode 1))) ;linum päälle javascript tiedostoissa
 (add-hook 'web-mode-hook '(lambda () (linum-mode 1))) ;linum päälle myös web-moodissa
 (add-hook 'c++-mode-hook '(lambda () (linum-mode 1)))
