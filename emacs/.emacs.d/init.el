@@ -175,9 +175,15 @@
 (use-package elfeed
   :ensure t
   :init
-  (setq elfeed-db-directory "~/Sync/elfeeddb")
-  (setq rmh-elfeed-org-files (list "~/Sync/elfeed.org"))
-  :bind (("C-x w" . elfeed)))
+  (setq elfeed-db-directory "~/.emacs.d/elfeeddb")
+  (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
+  :bind (("C-x w" . elfeed))
+  :config
+  (use-package elfeed-org
+    :ensure t
+    :config
+    (elfeed-org)
+    ))
 (use-package projectile
   :ensure t
   :diminish projectile-mode
@@ -220,7 +226,8 @@
   :config
   (use-package counsel-projectile
     :ensure t
-    :hook (haskell-mode))
+    :config
+    (setq counsel-projectile-mode t))
   (ivy-mode 1)
   (setq ivy-extra-directories nil)) ;do not show ./ and .//
 
