@@ -380,8 +380,11 @@
 (use-package ob-ipython
   :ensure t)
 (use-package json-mode
-  :ensure t)
-(add-hook 'js2-mode-hook '(lambda () (linum-mode 1))) ;linum päälle javascript tiedostoissa
+  :ensure t
+  :config
+  (add-hook 'json-mode-hook #'flycheck-mode))
+(use-package js2-mode
+  :ensure t)                                        
 (add-hook 'web-mode-hook '(lambda () (linum-mode 1))) ;linum päälle myös web-moodissa
 (add-hook 'c++-mode-hook '(lambda () (linum-mode 1)))
 (use-package paredit
