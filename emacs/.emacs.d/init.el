@@ -34,6 +34,7 @@
   (add-hook 'haskell-mode-hook #'company-mode)
   (use-package company-anaconda
     :ensure t
+    :defer t
     :init
     (with-eval-after-load 'company
       (add-to-list 'company-backends 'company-anaconda)))
@@ -168,7 +169,8 @@
   :ensure t)
 (use-package cider
   :ensure t
-  :init
+  :defer t
+  :config
   (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
   (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
   (add-hook 'cider-mode-hook 'eldoc-mode))
@@ -259,6 +261,7 @@
 ;;varmistaa, että $PATH luetaan shellistä
 (use-package exec-path-from-shell
   :ensure t
+  :defer t
   :config
   (progn
     (when (memq window-system '(mac ns))
@@ -269,7 +272,9 @@
 ;;    (setq ispell-dictionary "en_GB"))) ;laita sanakirja automaattisesti käyttämään brittienglantia
 (use-package erc
   :if (or (daemonp) window-system)
+  :defer t
   :config
+  (setq erc-track-minor-mode nil)
   (progn
     ;;poista joistakin viesteistä ilmoittaminen ERC moodista
     (setq erc-track-exclude-types '("JOIN" "NICK" "PART" "QUIT"))
@@ -277,7 +282,7 @@
     (setq erc-join-buffer 'bury)
     ;; other random services (spelling)
     (use-package erc-services
-      :init
+      :config
       (progn
         (setq ispell-dictionary "en_GB")
         (add-to-list 'erc-modules 'spelling)
@@ -302,6 +307,7 @@
                                         ;    (setq undo-tree-visualizer-diff t)))
 (use-package anaconda-mode
   :ensure t
+  :defer t
   :init
   (add-hook 'python-mode-hook 'anaconda-mode)
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
@@ -309,7 +315,8 @@
 (use-package nose
   :ensure t)
 (use-package racket-mode
-  :ensure t)
+  :ensure t
+  :defer t)
 (use-package geiser
   :ensure t
   :init
@@ -407,10 +414,11 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '(;; other Babel languages
-   (plantuml . t)
-   (ipython . t)
-   (dot . t)
-   (shell . t)))
+  (plantuml . t)
+  (ipython . t)
+  (dot . t)
+  (shell . t))
+ )
 
 (setq org-plantuml-jar-path
       (expand-file-name "~/plantuml.jar"))
@@ -461,7 +469,7 @@
                ("dired" (mode . dired-mode))))))
 
 ;;laita trampin autosave kansion lokaaliksi
-(setq tramp-auto-save-directory "~/emacs/tramp-autosave")
+(setq tramp-auto-save-directory "~/.emacs.d/tramp-autosave")
 (setq tramp-default-method "sshx")
 
 ;;poista trampin autosave
@@ -590,7 +598,7 @@
                            (current-buffer) t
                            "*Xmllint Error Buffer*" t))
 (autoload 'notmuch "notmuch" "Notmuch mail" t)
-(require 'notmuch)
+;(require 'notmuch)
 (defun notmuch-get-date (date)
   "Converts a date for notmuch processing"
   (substring (shell-command-to-string (concat "date --date=\"" date "\" +%s")) 0 -1))
