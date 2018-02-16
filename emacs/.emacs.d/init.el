@@ -6,10 +6,6 @@
 	       '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
   )
-;(add-to-list 'load-path "~/.emacs.d/symon-master/")
-;;poistetaan toistaiseksi symon käytöstä
-;;(require 'symon) ;minibufferiin system monitor
-;;(setq-default symon-monitors '(symon-linux-memory-monitor symon-linux-cpu-monitor symon-windows-network-rx-monitor symon-windows-network-tx-monitor))
 (setq use-package-verbose t)
 (require 'use-package)
 (use-package eldoc
@@ -80,6 +76,7 @@
   (add-hook 'haskell-mode-hook 'dante-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode)
   (add-hook 'haskell-mode-hook 'haskell-style)
+  (add-hook 'haskell-mode-hook '(lambda () (linum-mode 1)))
   (custom-set-variables '(haskell-stylish-on-save t))
   (setq dante-repl-command-line '("cabal" "new-repl" dante-target))
   (add-hook 'dante-mode-hook
@@ -127,10 +124,6 @@
 
     (treemacs-follow-mode t)
     (treemacs-filewatch-mode t)))
-(use-package elfeed-org
-  :ensure t
-  :config
-  (elfeed-org))
 (use-package ledger-mode
   :ensure t
   :init
@@ -332,20 +325,26 @@
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
   :config
+  (setq org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil)
   (use-package org-protocol
     :init
     (setq org-capture-templates
 	  '(
-	    ("b" "Capture link over org-protocol"
-	     entry (file+headline "/Users/toniok/bookmarks.org" "Bookmark inbox")
+            ("t" "Todo" entry (file+headline "~/notes.org" "Tasks")
+             "* TODO %?\n  %i\n  %a")
+            ("n" "note" entry (file+headline "~/notes.org" "Notes")
+             "* %? :NOTE:\n%U\n%a\n")
+            ("L" "Capture link over org-protocol"
+	     entry (file+headline "/Users/toku/bookmarks.org" "Bookmark inbox")
 	     "** %:description\n   [[%:link][%:link]] \n   CREATED: %U\n\n   %i"
 	     :immediate-finish 1 :empty-lines 1)
-	    ("t" "Capture todo over org-protocol"
-	     entry (file+headline "/Users/toniok/agenda.org" "Future tasks")
+	    ("T" "Capture todo over org-protocol"
+	     entry (file+headline "/Users/toku/agenda.org" "Future tasks")
 	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
 	     :immediate-finish 1 :empty-lines 1 :prepend t)
-	    ("i" "Capture an idea over org-protocol"
-	     entry (file+headline "/Users/toniok/blog.org" "Ideas")
+	    ("p" "Capture an idea over org-protocol"
+	     entry (file+headline "/Users/toku/notes.org" "Ideas")
 	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
 	     :immediate-finish 1 :empty-lines 1 :prepend t)))
     (setq org-enforce-todo-dependencies t))
@@ -365,6 +364,7 @@
   (setq org-clock-idle-time 30)
   (setq org-default-notes-file "~/notes.org")
   (setq org-agenda-files '("~/Workdocuments/"))
+  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
   (add-hook 'org-mode-hook '(lambda () (hl-line-mode 1)))) ;väritä nykyinen rivi org-moodissa
 (use-package cperl-mode
@@ -486,11 +486,6 @@
 
 ;;automaattisesti mahduta tekstirivit näkyvään tilaan
 (add-hook 'org-mode-hook 'visual-line-mode)
-;(global-set-key (kbd "C-c a") 'org-agenda)
-;(global-set-key (kbd "C-c c") 'org-capture)
-(setq org-default-notes-file "~/organizer.org")
-(setq org-agenda-files '("~/Workdocuments/"))
-(setq org-refile-targets '((org-agenda-files . (:maxlevel . 9))))
 (setq TeX-PDF-mode t) ;huolehdi, että latex käännetään aina pdflatexilla
 
 ;näytä vastinsulje minibufferissa
