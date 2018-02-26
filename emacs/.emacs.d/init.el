@@ -10,6 +10,10 @@
 (require 'use-package)
 (use-package eldoc
   :diminish eldoc-mode)
+(use-package winner
+  :diminish winner-mode
+  :config
+  (winner-mode 1))
 (use-package flycheck
   :ensure t
   :init
