@@ -191,7 +191,8 @@
   :init
   (setq projectile-completion-system 'ivy)
   :config
-  (projectile-global-mode))
+  (projectile-mode 1)
+  (add-to-list 'projectile-globally-ignored-directories "Z_dependencies"))
 (use-package rainbow-delimiters
   :ensure t
   :init
