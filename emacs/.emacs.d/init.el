@@ -82,10 +82,12 @@
   (add-hook 'haskell-mode-hook 'haskell-style)
   (add-hook 'haskell-mode-hook '(lambda () (linum-mode 1)))
   (custom-set-variables '(haskell-stylish-on-save t))
-  (setq dante-repl-command-line '("cabal" "new-repl" dante-target))
+  (setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle/dante"))
   (add-hook 'dante-mode-hook
             '(lambda () (flycheck-add-next-checker 'haskell-dante
-                                                   '(warning . haskell-hlint)))))
+                                                   '(warning . haskell-hlint))))
+  :config
+  (remove-hook 'xref-backend-functions 'dante--xref-backend))
 
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/bin/aspell")
