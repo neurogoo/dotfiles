@@ -578,13 +578,7 @@
 (if (not (boundp 'save-persistent-scratch-timer))
     (setq save-persistent-scratch-timer
           (run-with-idle-timer 300 t 'save-persistent-scratch)))
-(defun setup-terminal-client-colors ()
-  ;(if (not window-system)
-   ;   (set-background-color "white")
-  ; )
-  )
-;(add-hook 'after-make-frame-functions 'setup-terminal-client-colors)
-
+                                        
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server"
