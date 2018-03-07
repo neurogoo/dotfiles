@@ -610,6 +610,12 @@
   (notmuch-search
    (concat
     (notmuch-get-date "today 0") ".." (notmuch-get-date "now"))))
+(use-package linum-highlight-current-line-number
+  :load-path "linum-highlight-current-line-number"
+  :config
+  (set-face-foreground 'linum "#4C566A")
+  (set-face-background 'linum nil)
+  (setq linum-format 'linum-highlight-current-line-number))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
