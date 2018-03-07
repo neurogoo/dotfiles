@@ -1,0 +1,3 @@
+:set prompt-function \ms _ -> let f x = let (y,z) = break (== '.') x in if null z || null y then y else head y : '.' : f (tail z); ms' = filter (/= "Prelude") ms; p = case ms' of [] -> ""; [x] -> ' ' : x; xs -> concatMap ((' ' :) . f) xs in return $ "\ESC[1;34m\x03BB" ++ p ++ "> \ESC[m"
+:def hoogle \x -> return $ ":!hoogle \"" ++ x ++ "\""
+:def doc \x -> return $ ":!hoogle --info \"" ++ x ++ "\""
