@@ -596,20 +596,24 @@
 (autoload 'notmuch "notmuch" "Notmuch mail" t)
 ;(require 'notmuch)
 (defun notmuch-get-date (date)
-  "Converts a date for notmuch processing"
+  "Convert a date for notmuch processing."
   (substring (shell-command-to-string (concat "date --date=\"" date "\" +%s")) 0 -1))
 (defun notmuch-today ()
-  "Shows today's mail"
+  "Show today's mail."
   (interactive)
   (notmuch-search
    (concat
     (notmuch-get-date "today 0") ".." (notmuch-get-date "now"))))
+(defun my-run-hasktags--sentinel (process status)
+  (message "Hasktags exited with status: %s" status))
 (defun my-run-hasktags ()
   "Generate new hasktags TAGS in ~/hmr folder."
   (interactive)
   (let ((default-directory "/Users/toku/hmr/")
         (temp-buffer-name "*my-hasktags-output*"))
-    (async-shell-command "hasktags -e -x --ignore-close-implementation ." temp-buffer-name)))
+    (set-process-sentinel
+     (start-process "Hasktags" nil "hasktags" "-e" "-x" "--ignore-close-implementation" ".")
+     'my-run-hasktags--sentinel)))
 (use-package linum-highlight-current-line-number
   :load-path "linum-highlight-current-line-number"
   :config
