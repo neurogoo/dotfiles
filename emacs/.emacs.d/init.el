@@ -159,7 +159,8 @@
   (use-package flycheck-rust
     :ensure t
     :init
-    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup)))
+    (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
+  (setq rust-format-on-save t))
 (use-package cargo
   :ensure t
   :init
