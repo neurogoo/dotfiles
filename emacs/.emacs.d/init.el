@@ -96,7 +96,8 @@
             '(lambda () (flycheck-add-next-checker 'haskell-dante
                                                    '(warning . haskell-hlint))))
   :config
-  (remove-hook 'xref-backend-functions 'dante--xref-backend))
+  (remove-hook 'xref-backend-functions 'dante--xref-backend)
+  (setq tags-case-fold-search nil))
 
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/bin/aspell")
