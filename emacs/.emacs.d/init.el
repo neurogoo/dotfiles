@@ -257,6 +257,15 @@
   :ensure t
   :bind
   (("C-x g" . magit-status)))
+(use-package diff-hl
+  :ensure t
+  :config
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh)
+  (custom-set-faces
+  '(diff-hl-change ((t (:background "#3a81c3"))))
+  '(diff-hl-insert ((t (:background "#7ccd7c"))))
+  '(diff-hl-delete ((t (:background "#ee6363")))))
+  (global-diff-hl-mode 1))
 (use-package sly
   :disabled
   :init
