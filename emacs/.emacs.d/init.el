@@ -44,13 +44,17 @@
   (add-hook 'rust-mode-hook #'company-mode)
   (add-hook 'haskell-mode-hook #'company-mode)
   (use-package company-anaconda
-    :ensure t
+    :disabled t
     :defer t
     :init
     (with-eval-after-load 'company
       (add-to-list 'company-backends 'company-anaconda)))
+  (use-package company-ghci
+    :ensure t
+    :init
+    (with-eval-after-load 'company
+      (add-to-list 'company-backends 'company-ghci)))
   (use-package company-jedi
-    :disabled t
     :ensure t
     :init
     (with-eval-after-load 'company
@@ -226,6 +230,7 @@
     (setq helm-M-x-fuzzy-match t)))
 (use-package ivy
   :ensure t
+  :diminish ivy-mode
   :bind (("M-x" . counsel-M-x))
   :init
   (setq ivy-use-virtual-buffers t)
@@ -309,9 +314,9 @@
         (erc-services-mode 1)
         (erc-spelling-mode 1)))
     ;;liity näihin servereihin ja kanaviin automaattisesti käynnistyksen yhteydessä
-    (let ((erc-data-file  "~/.emacs.d/ercinfo.el"))
+    (let ((erc-data-file  "~/.emacs.d/ercinfo2.el"))
       (if (file-exists-p erc-data-file)
-	  (progn 
+	  (progn
 	    (load erc-data-file)
 	    (erc-load-info))))
                                         ;    (add-hook 'erc-mode-hook 'flyspell-mode) ;laita oikeinkirjoitus päälle irkkikanavilla
@@ -345,6 +350,7 @@
   )
 (use-package yasnippet
   :ensure t
+  :diminish yassnippet
   :config
   (yas-global-mode 1))
 (use-package org
@@ -466,13 +472,13 @@
 					      (setq show-paren-style 'expressions)
                                               (exec-path-from-shell-initialize))))
   (progn
-    (menu-bar-mode -1) 
-    (tool-bar-mode -1) 
+    (menu-bar-mode -1)
+    (tool-bar-mode -1)
     (scroll-bar-mode -1)
     (show-paren-mode 1)
     ;highlight between ()
     (setq show-paren-style 'expression)
-    (exec-path-from-shell-initialize))) 
+    (exec-path-from-shell-initialize)))
 
 (setq-default indent-tabs-mode nil) ;emacs käyttää tabulaattorin sijasta välilyöntiä
 (setq tab-width 4) ;näytä kaikki sarkaimet 4 välilyön kokoisina
@@ -508,6 +514,7 @@
 
 ;;automaattisesti mahduta tekstirivit näkyvään tilaan
 (add-hook 'org-mode-hook 'visual-line-mode)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq TeX-PDF-mode t) ;huolehdi, että latex käännetään aina pdflatexilla
 
 ;näytä vastinsulje minibufferissa
@@ -542,12 +549,12 @@
 
 (cond
  ((find-font (font-spec :name "Iosevka")) (set-face-attribute 'default nil
-                    :family "Iosevka" :height (if (eq system-type 'gnu/linux) 
+                    :family "Iosevka" :height (if (eq system-type 'gnu/linux)
                                                            130
                                                          (if (eq system-type 'darwin)
                                                              145)) :weight 'normal))
  ((set-face-attribute 'default nil
-                    :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux) 
+                    :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux)
                                                            130
                                                          (if (eq system-type 'darwin)
                                                              140)) :weight 'normal)))
@@ -646,3 +653,12 @@
  '(diff-hl-change ((t (:background "#3a81c3"))))
  '(diff-hl-delete ((t (:background "#ee6363"))))
  '(diff-hl-insert ((t (:background "#7ccd7c")))))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(haskell-stylish-on-save t)
+ '(package-selected-packages
+   (quote
+    (company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
