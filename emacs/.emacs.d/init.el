@@ -6,6 +6,8 @@
 	       '("melpa" . "http://melpa.milkbox.net/packages/") t)
   (add-to-list 'package-archives '("org" . "https://orgmode.org/elpa/") t)
   )
+(when (>= emacs-major-version 26)
+  (global-display-line-numbers-mode))
 (setq use-package-verbose t)
 (require 'use-package)
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
@@ -89,7 +91,6 @@
   (add-hook 'haskell-mode-hook 'dante-mode)
   (add-hook 'haskell-mode-hook 'flycheck-mode)
   (add-hook 'haskell-mode-hook 'haskell-style)
-  (add-hook 'haskell-mode-hook '(lambda () (linum-mode 1)))
   (custom-set-variables '(haskell-stylish-on-save t))
   (setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle/dante"))
   (add-hook 'dante-mode-hook
@@ -396,10 +397,7 @@
 (use-package cperl-mode
   :init
   (progn
-    (defalias 'perl-mode 'cperl-mode))
-  :config
-  (progn
-    (add-hook 'cperl-mode-hook '(lambda () (linum-mode 1)))))
+    (defalias 'perl-mode 'cperl-mode)))
 (use-package google-translate
   ;;:ensure t
   :bind
@@ -417,9 +415,7 @@
   :config
   (add-hook 'json-mode-hook #'flycheck-mode))
 (use-package js2-mode
-  :ensure t)                                        
-(add-hook 'web-mode-hook '(lambda () (linum-mode 1))) ;linum päälle myös web-moodissa
-(add-hook 'c++-mode-hook '(lambda () (linum-mode 1)))
+  :ensure t)
 (use-package paredit
   :disabled t
   :ensure t
@@ -597,7 +593,7 @@
 (if (not (boundp 'save-persistent-scratch-timer))
     (setq save-persistent-scratch-timer
           (run-with-idle-timer 300 t 'save-persistent-scratch)))
-                                        
+
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
   "Save buffers, Quit, and Shutdown (kill) server"
@@ -633,7 +629,10 @@
     (set-process-sentinel
      (start-process "Hasktags" nil "hasktags" "-e" "-x" "--ignore-close-implementation" ".")
      'my-run-hasktags--sentinel)))
+(set-face-attribute 'line-number nil :foreground "#4C566A")
+(set-face-attribute 'line-number-current-line nil :foreground "goldenrod")
 (use-package linum-highlight-current-line-number
+  :disabled t
   :load-path "linum-highlight-current-line-number"
   :config
   (set-face-foreground 'linum "#4C566A")
