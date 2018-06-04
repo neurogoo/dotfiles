@@ -428,7 +428,19 @@
   :ensure t
   :init
   (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode))
-
+(defun setup-tide-mode ()
+  (interactive)
+  (tide-setup)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
+  (eldoc-mode +1)
+  (tide-hl-identifier-mode +1)
+  (company-mode +1))
+(use-package tide
+  :ensure t
+  :config
+  (setq company-tooltip-align-annotations t)
+  (add-hook 'before-save-hook 'tide-format-before-save)
+  (add-hook 'typescript-mode-hook #'setup-tide-mode))
 (use-package meghanada
   :ensure t
   :init
@@ -635,7 +647,8 @@
   (let ((default-directory "/Users/toku/hmr/")
         (temp-buffer-name "*my-hasktags-output*"))
     (set-process-sentinel
-     (start-process "Hasktags" nil "hasktags" "-e" "-x" "--ignore-close-implementation" ".")
+     ;;(start-process "Hasktags" nil "hasktags" "-e" "-x" ".")
+     (start-process "Hasktags" nil "hasktags" "-e" "-x" "arcola" "avar" "avatar-app" "avatar-client" "aws-lambda-kleisli" "checklist-app" "contacts-api" "deprecated" "dist-newstyle" "dist" "docs.futurice.com" "dynmap-cache" "email-proxy-client" "email-proxy" "env-config" "flowdock-cli" "flowdock-grep" "flowdock-rest" "fum-api" "fum-carbon-app" "fum-client" "fum-types" "futurice-constants" "futurice-foundation" "futurice-github" "futurice-integrations" "futurice-lambda" "futurice-logo" "futurice-metrics" "futurice-postgres" "futurice-prelude" "futurice-pure-trans" "futurice-reports" "futurice-servant" "futurice-tribes" "github-proxy" "github-sync" "haxl-fxtra" "hc-app" "hours-api" "lambdacss" "log-cloudwatch" "mega-repo-tool" "monad-http" "optparse-sop" "periocron" "personio-client" "personio-proxy" "planmill-client" "planmill-proxy" "planmill-sync" "postgresql-simple-url" "proxy-app" "proxy-mgmt-app" "reports-app" "scripts" "servant-Chart" "servant-algebraic-graphs" "servant-binary-tagged" "servant-dashdo" "smileys-app" "sms-proxy" "tdigest" "theme-app" "vendor")
      'my-run-hasktags--sentinel)))
 (set-face-attribute 'line-number nil :foreground "#4C566A")
 (set-face-attribute 'line-number-current-line nil :foreground "goldenrod")
@@ -662,4 +675,4 @@
  '(haskell-stylish-on-save t)
  '(package-selected-packages
    (quote
-    (company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
+    (tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
