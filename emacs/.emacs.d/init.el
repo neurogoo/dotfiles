@@ -452,6 +452,8 @@
   (setq company-tooltip-align-annotations t)
   (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
+(use-package idris-mode
+  :ensure t)
 (use-package meghanada
   :ensure t
   :init
