@@ -108,13 +108,37 @@
   (add-hook 'haskell-mode-hook 'flycheck-mode)
   (add-hook 'haskell-mode-hook 'haskell-style)
   (custom-set-variables '(haskell-stylish-on-save t))
-  (setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle/dante"))
+  (setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle-dante"))
+  (setq max-lisp-eval-depth 10000)
   (add-hook 'dante-mode-hook
             '(lambda () (flycheck-add-next-checker 'haskell-dante
                                                    '(warning . haskell-hlint))))
   :config
+  (auto-save-visited-mode 1)
+  (setq auto-save-visited-interval 1)
+  (setq flymake-no-changes-timeout nil)
+  (setq flymake-start-syntax-check-on-newline nil)
+  (setq flycheck-check-syntax-automatically '(save mode-enabled))
   (remove-hook 'xref-backend-functions 'dante--xref-backend)
-  (setq tags-case-fold-search nil))
+  (setq tags-case-fold-search nil)
+  (add-hook 'align-load-hook
+            (lambda ()
+              (add-to-list 'align-rules-list
+               '(haskell-types
+                 (regexp . "\\(\\s-+\\)\\(::\\|∷\\)\\s-+")
+                 (modes quote (haskell-mode literate-haskell-mode))))
+              (add-to-list 'align-rules-list
+                           '(haskell-assignment
+                             (regexp . "\\(\\s-+\\)=\\s-+")
+                             (modes quote (haskell-mode literate-haskell-mode))))
+              (add-to-list 'align-rules-list
+                           '(haskell-arrows
+                             (regexp . "\\(\\s-+\\)\\(->\\|→\\)\\s-+")
+                             (modes quote (haskell-mode literate-haskell-mode))))
+              (add-to-list 'align-rules-list
+                           '(haskell-left-arrows
+                             (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
+                             (modes quote (haskell-mode literate-haskell-mode)))))))
 (use-package purescript-mode
   :ensure t)
 (use-package psc-ide
@@ -126,21 +150,92 @@
               (company-mode)
               (flycheck-mode)
               (turn-on-purescript-indentation))))
-
+(defun my-run-psc-ide-server ()
+  (psc-ide-server-start-impl "/Users/toku/Purescript/euler1")
+  ;; After 1 second we send a load all command
+  (run-at-time "1 sec" nil 'psc-ide-load-all))
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/bin/aspell")
     )
 (use-package moe-theme
+  :disabled t
   :ensure t
   :init
   (use-package powerline
-    :ensure t)
+    :ensure t
+    :init
+    (setq-default mode-line-format
+                '("%e"
+                  (:eval
+                   (let* ((active (powerline-selected-window-active))
+                          (mode-line-buffer-id (if active 'mode-line-buffer-id 'mode-line-buffer-id-inactive))
+                          (mode-line (if active 'mode-line 'mode-line-inactive))
+                          (face0 (if active 'powerline-active0 'powerline-inactive0))
+                          (face1 (if active 'powerline-active1 'powerline-inactive1))
+                          (face2 (if active 'powerline-active2 'powerline-inactive2))
+                          (separator-left (intern (format "powerline-%s-%s"
+							  (powerline-current-separator)
+                                                          (car powerline-default-separator-dir))))
+                          (separator-right (intern (format "powerline-%s-%s"
+                                                           (powerline-current-separator)
+                                                           (cdr powerline-default-separator-dir))))
+                          (lhs (list (powerline-raw "%*" face0 'l)
+                                     (when powerline-display-buffer-size
+                                       (powerline-buffer-size face0 'l))
+                                     (when powerline-display-mule-info
+                                       (powerline-raw mode-line-mule-info face0 'l))
+                                     (powerline-buffer-id `(mode-line-buffer-id ,face0) 'l)
+                                     (when (and (boundp 'which-func-mode) which-func-mode)
+                                       (powerline-raw which-func-format face0 'l))
+                                     (powerline-raw " " face0)
+                                     (funcall separator-left face0 face1)
+                                     (when (and (boundp 'erc-track-minor-mode) erc-track-minor-mode)
+                                       (powerline-raw erc-modified-channels-object face1 'l))
+                                     (powerline-major-mode face1 'l)
+                                     (powerline-process face1)
+                                     (powerline-minor-modes face1 'l)
+                                     (powerline-narrow face1 'l)
+                                     (powerline-raw " " face1)
+                                     (powerline-raw mode-line-misc-info nil 'r)
+                                     (funcall separator-left face1 face2)
+                                     (powerline-vc face2 'r)
+                                     (when (bound-and-true-p nyan-mode)
+                                       (powerline-raw (list (nyan-create)) face2 'l))))
+                          (rhs (list (powerline-raw global-mode-string face2 'r)
+                                     (funcall separator-right face2 face1)
+				     (unless window-system
+				       (powerline-raw (char-to-string #xe0a1) face1 'l))
+				     (powerline-raw "%4l" face1 'l)
+				     (powerline-raw ":" face1 'l)
+				     (powerline-raw "%3c" face1 'r)
+				     (funcall separator-right face1 face0)
+				     (powerline-raw " " face0)
+				     (powerline-raw "%6p" face0 'r)
+                                     (when powerline-display-hud
+                                       (powerline-hud face0 face2))
+				     (powerline-fill face0 0)
+				     )))
+		     (concat (powerline-render lhs)
+			     (powerline-fill face2 (powerline-width rhs))
+			     (powerline-render rhs))))))
+    :config)
   :config
   (moe-dark)
   (powerline-moe-theme)
   (if (eq system-type 'darwin)
       (moe-theme-set-color 'purple)
     (moe-theme-set-color 'orange)))
+(use-package all-the-icons
+  :ensure t)
+(use-package doom-themes
+  :ensure t
+  :config
+  (load-theme 'doom-one t)
+  (doom-themes-org-config))
+(use-package doom-modeline
+  :ensure t
+  :defer t
+  :hook (after-init . doom-modeline-init))
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -179,6 +274,7 @@
   :mode "\\.plantuml\\'")
 (use-package which-key
   :ensure t
+  :diminish which-key-mode
   :config
   (which-key-mode))
 (use-package rust-mode
@@ -231,7 +327,8 @@
   (setq projectile-completion-system 'ivy)
   :config
   (projectile-mode 1)
-  (add-to-list 'projectile-globally-ignored-directories "Z_dependencies"))
+  (add-to-list 'projectile-globally-ignored-directories "Z_dependencies")
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
 (use-package rainbow-delimiters
   :ensure t
   :init
@@ -550,7 +647,7 @@
 
 ;;automaattisesti mahduta tekstirivit näkyvään tilaan
 (add-hook 'org-mode-hook 'visual-line-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;(add-hook 'before-save-hook 'delete-trailing-whitespace)
 (setq TeX-PDF-mode t) ;huolehdi, että latex käännetään aina pdflatexilla
 
 ;näytä vastinsulje minibufferissa
@@ -664,18 +761,20 @@
     (notmuch-get-date "today 0") ".." (notmuch-get-date "now"))))
 (defun my-run-hasktags--sentinel (process status)
   (message "Hasktags exited with status: %s" status))
+(defmacro make-hasktags-string (file-list)
+  `(append '(start-Hasktags "process" nil "hasktags" "-e" "-x") ,file-list))
 (defun my-run-hasktags ()
   "Generate new hasktags TAGS in ~/hmr folder."
   (interactive)
   (let ((default-directory "/Users/toku/hmr/")
-        (temp-buffer-name "*my-hasktags-output*"))
+        (temp-buffer-name "*my-hasktags-output*")
+        (hmr-file-list (seq-remove
+                        (lambda (str) (string-match-p "TAGS\\|Z_dependencies\\|vendor" str))
+                        (seq-filter
+                         (lambda (str) (string-match-p "^[a-z]" str))
+                         (directory-files "/Users/toku/hmr/")))))
     (set-process-sentinel
-     (eval (append '(start-process "Hasktags" nil "hasktags" "-e" "-x")
-                   (seq-remove
-                    (lambda (str) (string-match-p "TAGS\\|Z_dependencies" str))
-                    (seq-filter
-                     (lambda (str) (string-match-p "^[a-z]" str))
-                     (directory-files "/Users/toku/hmr/")))))
+     (make-hasktags-string hmr-file-list)
      'my-run-hasktags--sentinel)))
 (set-face-attribute 'line-number nil :foreground "#8a8a8a" :background nil)
 (set-face-attribute 'line-number-current-line nil :foreground "goldenrod")
@@ -702,4 +801,4 @@
  '(haskell-stylish-on-save t)
  '(package-selected-packages
    (quote
-    (tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
+    (doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
