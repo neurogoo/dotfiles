@@ -36,8 +36,18 @@
     :ensure t
     :config
     (flycheck-plantuml-setup)))
+(use-package eyebrowse
+  :ensure t
+  :config
+  (eyebrowse-mode t))
+(use-package ws-butler
+  :ensure t
+  :diminish ws-butler-mode
+  :config
+  (add-hook 'prog-mode-hook #'ws-butler-mode))
 (use-package company
   :ensure t
+  :diminish company-mode
   :init
   (add-hook 'cider-repl-mode-hook #'company-mode)
   (add-hook 'cider-mode-hook #'company-mode)
