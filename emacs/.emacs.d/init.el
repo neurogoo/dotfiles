@@ -21,6 +21,8 @@
     )
 (use-package diminish
   :ensure t)
+(use-package popwin
+  :ensure t)
 (use-package eldoc
   :diminish eldoc-mode)
 (use-package winner
@@ -483,24 +485,12 @@
         org-outline-path-complete-in-steps nil)
   (use-package org-protocol
     :init
-    (setq org-capture-templates
-	  '(
-            ("t" "Todo" entry (file+headline "~/notes.org" "Tasks")
-             "* TODO %?\n  %i\n  %a")
-            ("n" "note" entry (file+headline "~/notes.org" "Notes")
-             "* %? :NOTE:\n%U\n%a\n")
-            ("L" "Capture link over org-protocol"
-	     entry (file+headline "/Users/toku/bookmarks.org" "Bookmark inbox")
-	     "** %:description\n   [[%:link][%:link]] \n   CREATED: %U\n\n   %i"
-	     :immediate-finish 1 :empty-lines 1)
-	    ("T" "Capture todo over org-protocol"
-	     entry (file+headline "/Users/toku/agenda.org" "Future tasks")
-	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
-	     :immediate-finish 1 :empty-lines 1 :prepend t)
-	    ("p" "Capture an idea over org-protocol"
-	     entry (file+headline "/Users/toku/notes.org" "Ideas")
-	     "** TODO %:link \n   CREATED: %U\n   SOURCE: %:description\n\n   %:initial"
-	     :immediate-finish 1 :empty-lines 1 :prepend t)))
+    (setq org-capture-templates '(("t" "Todo [inbox]" entry
+                                   (file+headline "~/Workdocuments/inbox.org" "Tasks")
+                                   "* TODO %i%?")
+                                  ("T" "Tickler" entry
+                                   (file+headline "~/Workdocuments/tickler.org" "Tickler")
+                                   "* %i%? \n %U")))
     (setq org-enforce-todo-dependencies t))
   (use-package org-present
     :ensure t)
@@ -510,16 +500,22 @@
     :config
     (setq org-pandoc-options-for-beamer-pdf '((pdf-engine . "xelatex"))))
   (use-package ox-reveal
-    :disabled
+    :ensure t
     :config
-    (setq org-reveal-root "file:///Users/toniok/Downloads/reveal.js-3.5.0/"))
+    (use-package htmlize
+      :ensure t)
+    (setq org-reveal-root "file:///Users/toku/Downloads/reveal.js-3.7.0/"))
   :init
   (setq org-confirm-babel-evaluate nil)
   (setq org-clock-idle-time 30)
   (setq org-default-notes-file "~/notes.org")
-  (setq org-agenda-files '("~/Workdocuments/"))
-  (setq org-refile-targets '((org-agenda-files . (:maxlevel . 3))))
+  (setq org-agenda-files '("~/Workdocuments/inbox.org" "~/Workdocuments/gtd.org" "~/Workdocuments/tickler.org"))
+  (setq org-refile-targets '(("~/Workdocuments/gtd.org" :maxlevel . 3)
+                             ("~/Workdocuments/someday.org" :level . 1)
+                             ("~/Workdocuments/tickler.org" :maxlevel . 2)))
+  (setq org-todo-keywords '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d)" "CANCELLED(c)")))
   (add-hook 'org-babel-after-execute-hook 'org-display-inline-images 'append)
+  (org-agenda-list 1)
   (add-hook 'org-mode-hook '(lambda () (hl-line-mode 1)))) ;väritä nykyinen rivi org-moodissa
 (use-package cperl-mode
   :init
