@@ -119,7 +119,7 @@
   (add-hook 'haskell-mode-hook 'flycheck-mode)
   (add-hook 'haskell-mode-hook 'haskell-style)
   (custom-set-variables '(haskell-stylish-on-save t))
-  (setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle-dante"))
+  ;;(setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle-dante"))
   (setq max-lisp-eval-depth 10000)
   (add-hook 'dante-mode-hook
             '(lambda () (flycheck-add-next-checker 'haskell-dante
@@ -805,6 +805,65 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(dante-repl-command-line-methods-alist
+   (quote
+    ((styx .
+           #[257 "\300\301\302#\207"
+                 [dante-repl-by-file
+                  ("styx.yaml")
+                  ("styx" "repl" dante-target)]
+                 5 "
+
+(fn ROOT)"])
+     (nix .
+          #[257 "\300\301\302#\207"
+                [dante-repl-by-file
+                 ("shell.nix" "default.nix")
+                 ("nix-shell" "--pure" "--run"
+                  (concat "cabal repl "
+                          (or dante-target "")
+                          " --builddir=dist/dante"))]
+                5 "
+
+(fn ROOT)"])
+     (impure-nix .
+                 #[257 "\300\301\302#\207"
+                       [dante-repl-by-file
+                        ("shell.nix" "default.nix")
+                        ("nix-shell" "--run"
+                         (concat "cabal repl "
+                                 (or dante-target "")
+                                 " --builddir=dist/dante"))]
+                       5 "
+
+(fn ROOT)"])
+     (nix-ghci .
+               #[257 "\300\301\302#\207"
+                     [dante-repl-by-file
+                      ("shell.nix" "default.nix")
+                      ("nix-shell" "--pure" "--run" "ghci")]
+                     5 "
+
+(fn ROOT)"])
+     (new-build .
+                #[257 "\300\301\302#\204 \303\304!\205 \305\207"
+                      [directory-files nil ".+\\.cabal$" file-exists-p "cabal.project"
+                                       ("cabal" "new-repl" dante-target "--builddir=dist/dante")]
+                      5 "
+
+(fn ROOT)"])
+     (bare .
+           #[257 "\300\207"
+                 [("cabal" "repl" dante-target "--builddir=dist/dante")]
+                 2 "
+
+(fn _)"])
+     (bare-ghci .
+                #[257 "\300\207"
+                      [("ghci")]
+                      2 "
+
+(fn _)"]))))
  '(haskell-stylish-on-save t)
  '(package-selected-packages
    (quote
