@@ -101,15 +101,12 @@
         haskell-indentation-layout-offset 4
         haskell-indentation-left-offset 4
         haskell-indentation-ifte-offset 4))
-(defun cabal-fmt ()
-  "Formats cabal file with cabal-fmt tool."
-  (interactive)
-  (save-excursion
-    (when (eq major-mode 'haskell-cabal-mode)
-      (shell-command-on-region (point-min) (point-max)
-                               "cabal-fmt "
-                               (current-buffer) t
-                               "*Cabal-Fmt Error Buffer*" t))))
+(use-package reformatter
+  :ensure t
+  :config
+  (reformatter-define cabal-format
+                      :program "cabal-fmt"
+                      ))
 (use-package dante
   :ensure t
   :after haskell-mode
