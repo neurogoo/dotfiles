@@ -345,6 +345,8 @@
   (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
   (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
 ;;helm moodi päälle aina
+(use-package elm-mode
+  :ensure t)
 (use-package helm
   ;;:ensure t
   :disabled t
