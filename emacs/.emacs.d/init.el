@@ -807,66 +807,47 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(dante-repl-command-line-methods-alist
+ '(counsel-rg-base-command
+   "rg -S -M 160 --no-heading --line-number --color never %s .")
+ '(dante-methods-alist
    (quote
-    ((styx .
-           #[257 "\300\301\302#\207"
-                 [dante-repl-by-file
-                  ("styx.yaml")
-                  ("styx" "repl" dante-target)]
-                 5 "
-
-(fn ROOT)"])
-     (nix .
-          #[257 "\300\301\302#\207"
-                [dante-repl-by-file
-                 ("shell.nix" "default.nix")
-                 ("nix-shell" "--pure" "--run"
+    ((styx "styx.yaml"
+           ("styx" "repl" dante-target))
+     (nix dante-cabal-nix
+          ("nix-shell" "--pure" "--run"
+           (concat "cabal repl "
+                   (or dante-target "")
+                   " --builddir=dist/dante")))
+     (impure-nix dante-cabal-nix
+                 ("nix-shell" "--run"
                   (concat "cabal repl "
                           (or dante-target "")
-                          " --builddir=dist/dante"))]
-                5 "
+                          " --builddir=dist/dante")))
+     (nix-ghci
+      #[257 "\300\301\302#\207"
+            [directory-files t "shell.nix\\|default.nix"]
+            5 "
 
-(fn ROOT)"])
-     (impure-nix .
-                 #[257 "\300\301\302#\207"
-                       [dante-repl-by-file
-                        ("shell.nix" "default.nix")
-                        ("nix-shell" "--run"
-                         (concat "cabal repl "
-                                 (or dante-target "")
-                                 " --builddir=dist/dante"))]
-                       5 "
+(fn D)"]
+      ("nix-shell" "--pure" "--run" "ghci"))
+     (mafia "mafia"
+            ("mafia" "repl" dante-target))
+     (bare-cabal
+      #[257 "\300\301\302#\207"
+            [directory-files t ".cabal$"]
+            5 "
 
-(fn ROOT)"])
-     (nix-ghci .
-               #[257 "\300\301\302#\207"
-                     [dante-repl-by-file
-                      ("shell.nix" "default.nix")
-                      ("nix-shell" "--pure" "--run" "ghci")]
-                     5 "
+(fn D)"]
+      ("cabal" "new-repl" dante-target "--builddir=dist/dante"))
+     (bare-ghci
+      #[257 "\300\207"
+            [t]
+            2 "
 
-(fn ROOT)"])
-     (new-build .
-                #[257 "\300\301\302#\204 \303\304!\205 \305\207"
-                      [directory-files nil ".+\\.cabal$" file-exists-p "cabal.project"
-                                       ("cabal" "new-repl" dante-target "--builddir=dist/dante")]
-                      5 "
-
-(fn ROOT)"])
-     (bare .
-           #[257 "\300\207"
-                 [("cabal" "repl" dante-target "--builddir=dist/dante")]
-                 2 "
-
-(fn _)"])
-     (bare-ghci .
-                #[257 "\300\207"
-                      [("ghci")]
-                      2 "
-
-(fn _)"]))))
+(fn _)"]
+      ("ghci")))))
+; '(dante-project-root "/Users/toku/hmr2/")
  '(haskell-stylish-on-save t)
  '(package-selected-packages
    (quote
-    (doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
+    (elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
