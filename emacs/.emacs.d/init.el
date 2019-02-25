@@ -19,6 +19,8 @@
     kept-new-versions 20   ; how many of the newest versions to keep
     kept-old-versions 5    ; and how many of the old
     )
+(setq auto-save-file-name-transforms
+      '((".*" "~/.emacs.d/autosaves" t)))
 (use-package diminish
   :ensure t)
 (use-package popwin
@@ -279,7 +281,10 @@
   :mode "\\.dat\\'")
 (use-package plantuml-mode
   :ensure t
-  :mode "\\.plantuml\\'")
+  :mode "\\.plantuml\\'"
+  :config
+  (setq plantuml-jar-path
+      (expand-file-name "~/Downloads/plantuml.jar")))
 (use-package which-key
   :ensure t
   :diminish which-key-mode
@@ -296,6 +301,7 @@
     :init
     (add-hook 'rust-mode-hook #'racer-mode)
     (add-hook 'racer-mode-hook #'eldoc-mode)
+    (add-hook 'racer-mode-hook #'company-mode)
     (define-key rust-mode-map (kbd "TAB") #'company-indent-or-complete-common)
     (setq company-tooltip-align-annotations t))
   (use-package flycheck-rust
@@ -374,7 +380,7 @@
   (use-package flx
     :ensure t
     :config
-    (setq ivy-re-builders-alist '((t . ivy--regex-fuzzy))))
+    (setq ivy-re-builders-alist '((t . ivy--regex-plus))))
   :config
   (use-package counsel-projectile
     :ensure t
@@ -516,6 +522,8 @@
     (use-package htmlize
       :ensure t)
     (setq org-reveal-root "file:///Users/toku/Downloads/reveal.js-3.7.0/"))
+  (use-package org-tree-slide
+    :ensure t)
   :init
   (setq org-confirm-babel-evaluate nil)
   (setq org-clock-idle-time 30)
