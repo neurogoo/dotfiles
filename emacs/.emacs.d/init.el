@@ -313,7 +313,10 @@
   :ensure t
   :defer t
   :config
-  (setq cider-cljs-lein-repl "(do (use 'figwheel-sidecar.repl-api) (start-figwheel!) (cljs-repl))")
+  ;(setq cider-cljs-lein-repl
+  ;    "(do (require 'figwheel-sidecar.repl-api)
+  ;         (figwheel-sidecar.repl-api/start-figwheel!)
+  ;         (figwheel-sidecar.repl-api/cljs-repl))")
   (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
   (add-hook 'cider-mode-hook 'eldoc-mode))
 (use-package elfeed
