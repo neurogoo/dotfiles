@@ -34,12 +34,12 @@
 (use-package flycheck
   :ensure t
   :init
-  (global-flycheck-mode t)
+  (global-flycheck-mode t))
+(use-package flycheck-plantuml
+  :ensure t
+  :after (flycheck)
   :config
-  (use-package flycheck-plantuml
-    :ensure t
-    :config
-    (flycheck-plantuml-setup)))
+  (flycheck-plantuml-setup))
 (use-package eyebrowse
   :ensure t
   :config
@@ -64,17 +64,17 @@
     :defer t
     :init
     (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-anaconda)))
-  (use-package company-ghci
-    :ensure t
-    :init
-    (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-ghci)))
-  (use-package company-jedi
-    :ensure t
-    :init
-    (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-jedi))))
+      (add-to-list 'company-backends 'company-anaconda))))
+(use-package company-ghci
+  :ensure t
+  :after (company)
+  :init
+  (add-to-list 'company-backends 'company-ghci))
+(use-package company-jedi
+  :ensure t
+  :after (company)
+  :init
+  (add-to-list 'company-backends 'company-jedi))
 (use-package smartparens
   :ensure t
   :init
