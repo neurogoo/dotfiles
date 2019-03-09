@@ -237,6 +237,11 @@
     (moe-theme-set-color 'orange)))
 (use-package all-the-icons
   :ensure t)
+(use-package all-the-icons-ivy
+  :ensure t
+  :after (all-the-icons ivy)
+  :config
+  (all-the-icons-ivy-setup))
 (use-package doom-themes
   :ensure t
   :config
@@ -371,7 +376,8 @@
 (use-package ivy
   :ensure t
   :diminish ivy-mode
-  :bind (("M-x" . counsel-M-x))
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file))
   :init
   (setq ivy-use-virtual-buffers t)
   (setq ivy-display-style nil)
@@ -858,8 +864,7 @@
 
 (fn _)"]
       ("ghci")))))
-; '(dante-project-root "/Users/toku/hmr2/")
  '(haskell-stylish-on-save t)
  '(package-selected-packages
    (quote
-    (elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
+    (all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
