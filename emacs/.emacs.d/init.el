@@ -165,8 +165,8 @@
   ;; After 1 second we send a load all command
   (run-at-time "1 sec" nil 'psc-ide-load-all))
 (if (eq system-type 'darwin)
-    (setq ispell-program-name "/usr/local/bin/aspell")
-    )
+    (setq ispell-program-name "/usr/local/bin/aspell"))
+(add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell)
 (use-package moe-theme
   :disabled t
   :ensure t
