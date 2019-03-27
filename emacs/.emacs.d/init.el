@@ -21,6 +21,30 @@
     )
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/autosaves" t)))
+(use-package paradox
+  :ensure t
+  :defer t
+  :custom
+  (paradox-execute-asynchronously t)
+  :config
+  (paradox-enable))
+(use-package lsp-mode
+  :ensure t
+  :commands lsp
+  :config
+  (add-hook 'python-mode-hook #'lsp))
+(use-package lsp-ui
+  :ensure t
+  :after (lsp-mode)
+  :commands (lsp-ui-mode)
+  :config
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+(use-package company-lsp
+  :ensure t
+  :after (lsp-mode company)
+  :commands company-lsp
+  :config
+  (push 'company-lsp company-backends))
 (use-package diminish
   :ensure t)
 (use-package popwin
@@ -71,6 +95,7 @@
   :init
   (add-to-list 'company-backends 'company-ghci))
 (use-package company-jedi
+  :disabled t
   :ensure t
   :after (company)
   :init
@@ -250,7 +275,9 @@
 (use-package doom-modeline
   :ensure t
   :defer t
-  :hook (after-init . doom-modeline-init))
+  :hook (after-init . doom-modeline-mode)
+  :config
+  (setq doom-modeline-env-version t))
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -803,6 +830,12 @@
     (set-process-sentinel
      (make-hasktags-string hmr-file-list)
      'my-run-hasktags--sentinel)))
+(defun my-haskell-pointfree (beg end)
+  (interactive "r")
+  (let ((str (buffer-substring beg end)))
+    (delete-region beg end)
+    (call-process "pointfree" nil t nil str)
+    (delete-char -1)))
 (set-face-attribute 'line-number nil :foreground "#8a8a8a" :background nil)
 (set-face-attribute 'line-number-current-line nil :foreground "goldenrod")
 (use-package linum-highlight-current-line-number
@@ -867,4 +900,6 @@
  '(haskell-stylish-on-save t)
  '(package-selected-packages
    (quote
-    (all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))))
+    (paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo)))
+ '(paradox-execute-asynchronously t t)
+ '(paradox-github-token t))
