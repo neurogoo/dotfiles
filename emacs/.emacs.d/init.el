@@ -621,6 +621,8 @@
   (setq company-tooltip-align-annotations t)
   (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
+(use-package ob-typescript
+  :ensure t)
 (use-package idris-mode
   :ensure t)
 (use-package meghanada
@@ -640,7 +642,8 @@
   (plantuml . t)
   (ipython . t)
   (dot . t)
-  (shell . t))
+  (shell . t)
+  (typescript . t))
  )
 
 (setq org-plantuml-jar-path
