@@ -31,14 +31,15 @@
 (use-package lsp-mode
   :ensure t
   :commands lsp
-  :config
-  (add-hook 'python-mode-hook #'lsp))
+  :hook ((python-mode . lsp)
+         (elm-mode . lsp)))
 (use-package lsp-ui
   :ensure t
   :after (lsp-mode)
   :commands (lsp-ui-mode)
+  :hook ((lsp-mode . lsp-ui-mode))
   :config
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  (setq lsp-ui-sideline-enable nil))
 (use-package company-lsp
   :ensure t
   :after (lsp-mode company)
@@ -88,7 +89,9 @@
     :defer t
     :init
     (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-anaconda))))
+      (add-to-list 'company-backends 'company-anaconda)))
+  :config
+  (add-to-list 'company-backends 'company-elm))
 (use-package company-ghci
   :ensure t
   :after (company)
@@ -114,6 +117,7 @@
   (add-hook 'scheme-mode-hook 'smartparens-mode)
   (add-hook 'scheme-mode-hook 'smartparens-strict-mode)
   (add-hook 'haskell-mode-hook 'smartparens-mode)
+  (add-hook 'elm-mode-hook 'smartparens-mode)
   :config
   (progn
     (require 'smartparens-config)
@@ -393,7 +397,9 @@
   (add-hook 'scheme-mode-hook 'rainbow-delimiters-mode))
 ;;helm moodi päälle aina
 (use-package elm-mode
-  :ensure t)
+  :ensure t
+  :init
+  (setq elm-format-on-save t))
 (use-package helm
   ;;:ensure t
   :disabled t
