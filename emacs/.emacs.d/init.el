@@ -416,7 +416,10 @@
   :ensure t
   :diminish ivy-mode
   :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file))
+         ("C-x C-f" . counsel-find-file)
+         ("M-y" . counsel-yank-pop)
+         :map ivy-minibuffer-map
+         ("M-y" . ivy-next-line))
   :init
   (setq ivy-use-virtual-buffers t)
   (setq ivy-display-style nil)
