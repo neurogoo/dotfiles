@@ -633,8 +633,10 @@
 (use-package ob-typescript
   :ensure t)
 (use-package idris-mode
+  :mode "\\.idr\\'"
   :ensure t)
 (use-package meghanada
+  :defer t
   :ensure t
   :init
   ;; Don't auto-start
@@ -652,11 +654,12 @@
   (ipython . t)
   (dot . t)
   (shell . t)
-  (typescript . t))
+  (typescript . t)
+  (restclient . t))
  )
 
 (setq org-plantuml-jar-path
-      (expand-file-name "~/plantuml.jar"))
+      (expand-file-name "~/Downloads/plantuml.jar"))
 
 (setq mac-option-modifier nil
       mac-command-modifier 'meta
@@ -770,13 +773,6 @@
   (setq web-mode-enable-auto-pairing nil))
 
 (add-hook 'web-mode-hook  'my-web-mode-hook)
-(defun sp-web-mode-is-code-context (id action context)
-  (when (and (eq action 'insert)
-             (not (or (get-text-property (point) 'part-side)
-                      (get-text-property (point) 'block-side))))
-
-    t))
-(sp-local-pair 'web-mode "<" nil :when '(sp-web-mode-is-code-context))
 
 ;;funktio tiedoston polun saamiseksi helposti
 (define-key global-map (kbd "\C-c w")
