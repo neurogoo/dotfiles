@@ -436,9 +436,64 @@
     (setq counsel-projectile-mode t))
   (ivy-mode 1)
   (setq ivy-extra-directories nil)) ;do not show ./ and .//
-
+(use-package ivy-posframe
+  :ensure t
+  :after ivy
+  :init
+;;  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display)))
+  (setq ivy-posframe-display-functions-alist '((t . ivy-posframe-display-at-window-center)))
+  :config
+  (ivy-posframe-mode 1))
+(use-package ivy-rich
+  :ensure t
+  :after ivy
+  :config
+  (setcdr (assq t ivy-format-functions-alist) #'ivy-format-function-line)
+  (setq ivy-rich--display-transformers-list
+        '(counsel-find-file
+          (:columns
+           ((ivy-read-file-transformer)
+            (ivy-rich-counsel-find-file-truename
+             (:face font-lock-doc-face))))
+          counsel-M-x
+          (:columns
+           ((counsel-M-x-transformer
+             (:width 40))
+            (ivy-rich-counsel-function-docstring
+             (:face font-lock-doc-face))))
+          counsel-describe-function
+          (:columns
+           ((counsel-describe-function-transformer
+             (:width 40))
+            (ivy-rich-counsel-function-docstring
+             (:face font-lock-doc-face))))
+          counsel-describe-variable
+          (:columns
+           ((counsel-describe-variable-transformer
+             (:width 40))
+            (ivy-rich-counsel-variable-docstring
+             (:face font-lock-doc-face))))
+          counsel-recentf
+          (:columns
+           ((ivy-rich-candidate
+             (:width 0.8))
+            (ivy-rich-file-last-modified-time
+             (:face font-lock-comment-face))))
+          package-install
+          (:columns
+           ((ivy-rich-candidate
+             (:width 30))
+            (ivy-rich-package-version
+             (:width 16 :face font-lock-comment-face))
+            (ivy-rich-package-archive-summary
+             (:width 7 :face font-lock-builtin-face))
+            (ivy-rich-package-install-summary
+             (:face font-lock-doc-face))))))
+  (ivy-rich-mode 1)
+  )
 (use-package restclient
-  :disabled)
+  :ensure t
+  :defer t)
 (use-package deft
   :ensure t
   :init
@@ -603,14 +658,21 @@
     (setq google-translate-pop-up-buffer-set-focus t)
     (setq google-translate-translation-directions-alist '(("fi"."en")("en"."fi")))))
 (use-package ob-ipython
+  :defer t
+  :ensure t)
+(use-package ob-restclient
+  :defer t
   :ensure t)
 (use-package json-mode
+  :defer t
   :ensure t
   :config
   (add-hook 'json-mode-hook #'flycheck-mode))
 (use-package js2-mode
+  :defer t
   :ensure t)
 (use-package vue-mode
+  :defer t
   :ensure t)
 (use-package paredit
   :disabled t
