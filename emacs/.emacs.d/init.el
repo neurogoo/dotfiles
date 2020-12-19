@@ -28,18 +28,57 @@
   (paradox-execute-asynchronously t)
   :config
   (paradox-enable))
+(use-package org-roam
+  :ensure t
+  :hook
+  (after-init . org-roam-mode)
+  :custom
+  (org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/"))
+(use-package lean-mode
+  :ensure t)
+(use-package company-lean
+  :ensure t
+  :after (lean-mode company))
 (use-package lsp-mode
+  :init
+  (setq read-process-output-max (* 1024 1024))
+  (setq gc-cons-threshold 100000000)
   :ensure t
   :commands lsp
-  :hook ((python-mode . lsp)
-         (elm-mode . lsp)))
+  :hook ((elm-mode . lsp)
+         (haskell-mode . lsp)
+         (haskell-literate-mode . lsp)
+         (rust-mode . lsp)))
+(use-package lsp-python-ms
+  :ensure t
+  :init (setq lsp-python-ms-auto-install-server t)
+  :hook (python-mode . (lambda ()
+                          (require 'lsp-python-ms)
+                          (lsp))))
+(defun haskell-style ()
+  "Sets the current buffer to use Haskell Style. Meant to be
+  added to `haskell-mode-hook'"
+  (interactive)
+  (setq tab-width 4
+        haskell-indentation-layout-offset 4
+        haskell-indentation-left-offset 4
+        haskell-indentation-ifte-offset 4))
+(use-package lsp-haskell
+  :ensure t
+  :init
+  (add-hook 'haskell-mode-hook 'haskell-style)
+  :after (lsp-mode))
 (use-package lsp-ui
   :ensure t
   :after (lsp-mode)
   :commands (lsp-ui-mode)
   :hook ((lsp-mode . lsp-ui-mode))
   :config
-  (setq lsp-ui-sideline-enable nil))
+  (setq lsp-ui-sideline-enable t))
+(use-package lsp-ivy
+  :ensure t
+  :after (lsp-mode)
+  :commands lsp-ivy-workspace-symbol)
 (use-package company-lsp
   :ensure t
   :after (lsp-mode company)
@@ -124,14 +163,6 @@
     (sp-use-smartparens-bindings)))
 ;(setq sml/theme 'respectful)
                                         ;(sml/setup)
-(defun haskell-style ()
-  "Sets the current buffer to use Haskell Style. Meant to be
-  added to `haskell-mode-hook'"
-  (interactive)
-  (setq tab-width 4
-        haskell-indentation-layout-offset 4
-        haskell-indentation-left-offset 4
-        haskell-indentation-ifte-offset 4))
 (use-package reformatter
   :ensure t
   :config
@@ -139,6 +170,7 @@
                       :program "cabal-fmt"
                       ))
 (use-package dante
+  :disabled t
   :if (not (equal (system-name) "shindonburi"))
   :ensure t
   :after haskell-mode
@@ -339,6 +371,7 @@
   (add-hook 'rust-mode-hook #'smartparens-mode)
   :config
   (use-package racer
+    :disabled t
     :ensure t
     :init
     (add-hook 'rust-mode-hook #'racer-mode)
@@ -356,6 +389,7 @@
   :init
   (add-hook 'rust-mode-hook 'cargo-minor-mode))
 (use-package pydoc-info
+  :disabled t
   :ensure t)
 (use-package cider
   :ensure t
@@ -581,6 +615,7 @@
   (add-hook 'python-mode-hook 'anaconda-eldoc-mode)
   (add-hook 'python-mode-hook 'eldoc-mode))
 (use-package nose
+  :disabled t
   :ensure t)
 (use-package racket-mode
   :ensure t
@@ -635,7 +670,8 @@
              (file-exists-p "~/Workdocuments/gtd.org")
              (file-exists-p "~/Workdocuments/tickler.org"))
     (progn
-      (setq org-agenda-files '("~/Workdocuments/inbox.org" "~/Workdocuments/gtd.org" "~/Workdocuments/tickler.org"))
+;;      (setq org-agenda-files '("~/Workdocuments/inbox.org" "~/Workdocuments/gtd.org" "~/Workdocuments/tickler.org"))
+      (setq org-agenda-files '("~/Workdocuments/inbox.org"))
       (setq org-refile-targets '(("~/Workdocuments/gtd.org" :maxlevel . 3)
                                  ("~/Workdocuments/someday.org" :level . 1)
                                  ("~/Workdocuments/tickler.org" :maxlevel . 2)))))
@@ -939,8 +975,7 @@
  '(counsel-rg-base-command
    "rg -S -M 160 --no-heading --line-number --color never %s .")
  '(dante-methods-alist
-   (quote
-    ((styx "styx.yaml"
+   '((styx "styx.yaml"
            ("styx" "repl" dante-target))
      (nix dante-cabal-nix
           ("nix-shell" "--pure" "--run"
@@ -974,10 +1009,15 @@
             2 "
 
 (fn _)"]
-      ("ghci")))))
+      ("ghci"))))
  '(haskell-stylish-on-save t)
+ '(lsp-file-watch-ignored
+   '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]dist$" "[/\\\\]dist-newstyle$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.vscode$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]\\vendor$" "[/\\\\]\\dist-newstyle$"))
+ '(lsp-haskell-formatting-provider "stylish-haskell")
+ '(org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/")
  '(package-selected-packages
-   (quote
-    (vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo)))
+   '(company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
  '(paradox-execute-asynchronously t t)
- '(paradox-github-token t))
+ '(paradox-github-token t)
+ '(projectile-globally-ignored-directories
+   '("Z_dependencies" ".idea" ".vscode" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache" ".clangd" "vendor")))
