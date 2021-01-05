@@ -79,14 +79,16 @@
   :ensure t
   :after (lsp-mode)
   :commands lsp-ivy-workspace-symbol)
-(use-package company-lsp
-  :ensure t
-  :after (lsp-mode company)
-  :commands company-lsp
-  :config
-  (push 'company-lsp company-backends))
 (use-package diminish
   :ensure t)
+(use-package tree-sitter
+  :ensure t
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+(use-package tree-sitter-langs
+  :ensure t
+  :after (tree-sitter))
 (use-package popwin
   :ensure t)
 (use-package eldoc
@@ -726,8 +728,21 @@
   :ensure t
   :config
   (setq company-tooltip-align-annotations t)
-  (add-hook 'before-save-hook 'tide-format-before-save)
+  ;; use Prettier instead
+;  (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
+(use-package web-mode
+  :ensure t
+  :after (tide)
+  :mode "\\.tsx\\'"
+  :config
+  (add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "tsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
+;; enable typescript-tslint checker
+  (flycheck-add-mode 'typescript-tslint 'web-mode))
+
 (use-package ob-typescript
   :ensure t)
 (use-package idris-mode
@@ -1011,12 +1026,14 @@
 (fn _)"]
       ("ghci"))))
  '(haskell-stylish-on-save t)
+ '(idris-interpreter-path "idris2")
+ '(lsp-enable-snippet nil)
  '(lsp-file-watch-ignored
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]dist$" "[/\\\\]dist-newstyle$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.vscode$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]\\vendor$" "[/\\\\]\\dist-newstyle$"))
  '(lsp-haskell-formatting-provider "stylish-haskell")
  '(org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/")
  '(package-selected-packages
-   '(company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
+   '(tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
  '(paradox-execute-asynchronously t t)
  '(paradox-github-token t)
  '(projectile-globally-ignored-directories
