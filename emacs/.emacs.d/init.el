@@ -48,7 +48,9 @@
   :hook ((elm-mode . lsp)
          (haskell-mode . lsp)
          (haskell-literate-mode . lsp)
-         (rust-mode . lsp)))
+         (rust-mode . lsp))
+  :config
+  (setq lsp-headerline-breadcrumb-enable nil))
 (use-package lsp-python-ms
   :ensure t
   :init (setq lsp-python-ms-auto-install-server t)
@@ -639,7 +641,8 @@
          ("C-c a" . org-agenda))
   :config
   (setq org-refile-use-outline-path 'file
-        org-outline-path-complete-in-steps nil)
+        org-outline-path-complete-in-steps nil
+        org-hide-leading-stars t)
   (use-package org-protocol
     :init
     (setq org-capture-templates '(("t" "Todo [inbox]" entry
@@ -731,6 +734,8 @@
   ;; use Prettier instead
 ;  (add-hook 'before-save-hook 'tide-format-before-save)
   (add-hook 'typescript-mode-hook #'setup-tide-mode))
+(use-package prettier
+  :ensure t)
 (use-package web-mode
   :ensure t
   :after (tide)
