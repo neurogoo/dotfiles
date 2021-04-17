@@ -215,11 +215,6 @@
                            '(haskell-left-arrows
                              (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
                              (modes quote (haskell-mode literate-haskell-mode)))))))
-(use-package intero
-  :if (equal (system-name) "shindonburi")
-  :ensure t
-  :init
-  (add-hook 'haskell-mode-hook 'intero-mode))
 (use-package purescript-mode
   :ensure t)
 (use-package psc-ide
