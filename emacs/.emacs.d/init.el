@@ -758,7 +758,12 @@
   (add-hook 'java-mode-hook 'flycheck-mode))
 (use-package dumb-jump
   :ensure t)
-
+(use-package flycheck-clj-kondo
+  :ensure t)
+(use-package clojure-mode
+  :ensure t
+  :config
+  (require 'flycheck-clj-kondo))
 ;; active Org-babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -974,6 +979,11 @@
   (set-face-foreground 'linum "#4C566A")
   (set-face-background 'linum nil)
   (setq linum-format 'linum-highlight-current-line-number))
+;;Should be kept as a last thing because of initialization stuff
+(use-package envrc
+  :ensure t
+  :config
+  (envrc-global-mode))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
