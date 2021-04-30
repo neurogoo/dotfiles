@@ -132,9 +132,7 @@
     :defer t
     :init
     (with-eval-after-load 'company
-      (add-to-list 'company-backends 'company-anaconda)))
-  :config
-  (add-to-list 'company-backends 'company-elm))
+      (add-to-list 'company-backends 'company-anaconda))))
 (use-package company-ghci
   :ensure t
   :after (company)
@@ -880,7 +878,7 @@
                     :family "Iosevka" :height (if (eq system-type 'gnu/linux)
                                                            130
                                                          (if (eq system-type 'darwin)
-                                                             145)) :weight 'normal))
+                                                             170)) :weight 'normal))
  ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux)
                                                            130
