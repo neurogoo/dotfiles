@@ -48,7 +48,11 @@
   :hook ((elm-mode . lsp)
          (haskell-mode . lsp)
          (haskell-literate-mode . lsp)
-         (rust-mode . lsp))
+         ;(rust-mode . lsp)
+         )
+  :custom
+  (lsp-rust-analyzer-cargo-watch-command "clippy")
+  (lsp-rust-analyzer-server-display-inlay-hints t)
   :config
   (setq lsp-headerline-breadcrumb-enable nil))
 (use-package lsp-python-ms
@@ -125,7 +129,7 @@
   (add-hook 'cider-mode-hook #'company-mode)
   (add-hook 'python-mode-hook #'company-mode)
   (add-hook 'emacs-lisp-mode-hook #'company-mode)
-  (add-hook 'rust-mode-hook #'company-mode)
+  ;(add-hook 'rust-mode-hook #'company-mode)
   (add-hook 'haskell-mode-hook #'company-mode)
   (use-package company-anaconda
     :disabled t
@@ -361,7 +365,34 @@
   :diminish which-key-mode
   :config
   (which-key-mode))
+(use-package rustic
+  :ensure
+  :mode "\\.rs\\'"
+  ;; :bind (:map rustic-mode-map
+  ;;             ("M-j" . lsp-ui-imenu)
+  ;;             ("M-?" . lsp-find-references)
+  ;;             ("C-c C-c l" . flycheck-list-errors)
+  ;;             ("C-c C-c a" . lsp-execute-code-action)
+  ;;             ("C-c C-c r" . lsp-rename)
+  ;;             ("C-c C-c q" . lsp-workspace-restart)
+  ;;             ("C-c C-c Q" . lsp-workspace-shutdown)
+  ;;             ("C-c C-c s" . lsp-rust-analyzer-status))
+  :config
+  ;; uncomment for less flashiness
+  ;; (setq lsp-eldoc-hook nil)
+  ;; (setq lsp-enable-symbol-highlighting nil)
+  ;; (setq lsp-signature-auto-activate nil)
+
+  ;; comment to disable rustfmt on save
+  (setq rustic-format-on-save t)
+  (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
+
+(defun rk/rustic-mode-hook ()
+  ;; so that run C-c C-c C-r works without having to confirm
+  (setq-local buffer-save-without-query t))
+
 (use-package rust-mode
+  :disabled t
   :ensure t
   :mode "\\.rs\\'"
   :init
@@ -382,11 +413,14 @@
     (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
   (setq rust-format-on-save t))
 (use-package cargo
+  :disabled t
   :ensure t
   :init
   (add-hook 'rust-mode-hook 'cargo-minor-mode))
 (use-package pydoc-info
   :disabled t
+  :ensure t)
+(use-package clj-refactor
   :ensure t)
 (use-package cider
   :ensure t
@@ -758,10 +792,15 @@
   :ensure t)
 (use-package flycheck-clj-kondo
   :ensure t)
+(defun my-clojure-mode-hook ()
+  (clj-refactor-mode 1)
+  (setq cljr-warn-on-eval nil)
+  (yas-minor-mode 1))
 (use-package clojure-mode
   :ensure t
   :config
-  (require 'flycheck-clj-kondo))
+  (require 'flycheck-clj-kondo)
+  (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
 ;; active Org-babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
