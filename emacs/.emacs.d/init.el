@@ -892,8 +892,7 @@
 	(let* ((cb (char-before (point)))
 	       (matching-text (and cb
 				   (char-equal (char-syntax cb) ?\) )
-				   (blink-matching-open))))
-	  (when matching-text (message matching-text))))
+				   (blink-matching-open))))))
 ;(load "~/.emacs.d/.secrets") ;ei yleisesti jaettavat säädöt
 
 ;(defun on-frame-open (frame)
