@@ -167,14 +167,14 @@
   (progn
     (require 'smartparens-config)
     (sp-use-smartparens-bindings)))
-;(setq sml/theme 'respectful)
-                                        ;(sml/setup)
 (use-package reformatter
   :ensure t
   :config
   (reformatter-define cabal-format
-                      :program "cabal-fmt"
-                      ))
+    :program "cabal-fmt")
+  (reformatter-define edn-format
+    :program "bb"
+    :args '("-e" "(-> *in* clojure.edn/read clojure.pprint/pprint)" "-i")))
 (use-package dante
   :disabled t
   :if (not (equal (system-name) "shindonburi"))
@@ -725,9 +725,6 @@
     (setq google-translate-output-destination nil)
     (setq google-translate-pop-up-buffer-set-focus t)
     (setq google-translate-translation-directions-alist '(("fi"."en")("en"."fi")))))
-(use-package ob-ipython
-  :defer t
-  :ensure t)
 (use-package ob-restclient
   :defer t
   :ensure t)
@@ -916,7 +913,7 @@
                     :family "Iosevka" :height (if (eq system-type 'gnu/linux)
                                                            130
                                                          (if (eq system-type 'darwin)
-                                                             170)) :weight 'normal))
+                                                             190)) :weight 'normal))
  ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux)
                                                            130
