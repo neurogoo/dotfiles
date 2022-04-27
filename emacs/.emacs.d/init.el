@@ -730,6 +730,9 @@
   :config
   (require 'flycheck-clj-kondo)
   (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+(use-package yaml-mode
+  :ensure t
+  :mode "\\.yml\\'")
 ;; active Org-babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
