@@ -364,18 +364,6 @@
   ;         (figwheel-sidecar.repl-api/cljs-repl))")
   (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
   (add-hook 'cider-mode-hook 'eldoc-mode))
-(use-package elfeed
-  :ensure t
-  :init
-  (setq elfeed-db-directory "~/.emacs.d/elfeeddb")
-  (setq rmh-elfeed-org-files (list "~/.emacs.d/elfeed.org"))
-  :bind (("C-x w" . elfeed))
-  :config
-  (use-package elfeed-org
-    :ensure t
-    :config
-    (elfeed-org)
-    ))
 (use-package projectile
   :ensure t
   :diminish projectile-mode
