@@ -252,7 +252,8 @@
   :defer t
   :hook (after-init . doom-modeline-mode)
   :config
-  (setq doom-modeline-env-version t))
+  (setq doom-modeline-env-version t)
+  (setq doom-modeline-buffer-file-name-style 'relative-from-project))
 (use-package markdown-mode
   :ensure t
   :commands (markdown-mode gfm-mode)
@@ -298,7 +299,8 @@
   :config
   (which-key-mode))
 (use-package rustic
-  :ensure
+  :ensure t
+  :after '(rust-mode)
   :mode "\\.rs\\'"
   ;; :bind (:map rustic-mode-map
   ;;             ("M-j" . lsp-ui-imenu)
@@ -316,7 +318,7 @@
   ;; (setq lsp-signature-auto-activate nil)
 
   ;; comment to disable rustfmt on save
-  (setq rustic-format-on-save t)
+  (setq rustic-format-on-save nil)
   (add-hook 'rustic-mode-hook 'rk/rustic-mode-hook))
 
 (defun rk/rustic-mode-hook ()
@@ -324,7 +326,6 @@
   (setq-local buffer-save-without-query t))
 
 (use-package rust-mode
-  :disabled t
   :ensure t
   :mode "\\.rs\\'"
   :init
@@ -383,6 +384,7 @@
 ;;helm moodi päälle aina
 (use-package elm-mode
   :ensure t
+  :mode "\\.elm\\'"
   :init
   (setq elm-format-on-save t))
 (use-package helm
