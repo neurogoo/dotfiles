@@ -175,48 +175,6 @@
   (reformatter-define edn-format
     :program "bb"
     :args '("-e" "(-> *in* clojure.edn/read clojure.pprint/pprint)" "-i")))
-(use-package dante
-  :disabled t
-  :if (not (equal (system-name) "shindonburi"))
-  :ensure t
-  :after haskell-mode
-  :commands 'dante-mode
-  :init
-  (add-hook 'haskell-mode-hook 'dante-mode)
-  (add-hook 'haskell-mode-hook 'flycheck-mode)
-  (add-hook 'haskell-mode-hook 'haskell-style)
-  (custom-set-variables '(haskell-stylish-on-save t))
-  ;;(setq dante-repl-command-line '("cabal" "new-repl" dante-target "--builddir=dist-newstyle-dante"))
-  (setq max-lisp-eval-depth 10000)
-  (add-hook 'dante-mode-hook
-            '(lambda () (flycheck-add-next-checker 'haskell-dante
-                                                   '(warning . haskell-hlint))))
-  :config
-  (auto-save-visited-mode 1)
-  (setq auto-save-visited-interval 1)
-  (setq flymake-no-changes-timeout nil)
-  (setq flymake-start-syntax-check-on-newline nil)
-  (setq flycheck-check-syntax-automatically '(save mode-enabled))
-  (remove-hook 'xref-backend-functions 'dante--xref-backend)
-  (setq tags-case-fold-search nil)
-  (add-hook 'align-load-hook
-            (lambda ()
-              (add-to-list 'align-rules-list
-               '(haskell-types
-                 (regexp . "\\(\\s-+\\)\\(::\\|∷\\)\\s-+")
-                 (modes quote (haskell-mode literate-haskell-mode))))
-              (add-to-list 'align-rules-list
-                           '(haskell-assignment
-                             (regexp . "\\(\\s-+\\)=\\s-+")
-                             (modes quote (haskell-mode literate-haskell-mode))))
-              (add-to-list 'align-rules-list
-                           '(haskell-arrows
-                             (regexp . "\\(\\s-+\\)\\(->\\|→\\)\\s-+")
-                             (modes quote (haskell-mode literate-haskell-mode))))
-              (add-to-list 'align-rules-list
-                           '(haskell-left-arrows
-                             (regexp . "\\(\\s-+\\)\\(<-\\|←\\)\\s-+")
-                             (modes quote (haskell-mode literate-haskell-mode)))))))
 (use-package purescript-mode
   :ensure t)
 (use-package psc-ide
