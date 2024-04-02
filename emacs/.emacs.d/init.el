@@ -193,13 +193,14 @@
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/usr/local/bin/aspell"))
 (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell)
-(use-package all-the-icons
-  :ensure t)
-(use-package all-the-icons-ivy
+(use-package nerd-icons
   :ensure t
-  :after (all-the-icons ivy)
-  :config
-  (all-the-icons-ivy-setup))
+  :custom
+  (setq nerd-icons-font-family "Iosevka Nerd Font"))
+(use-package nerd-icons-ivy-rich
+  :ensure t
+  :init
+  (nerd-icons-ivy-rich-mode 1))
 (use-package doom-themes
   :ensure t
   :config
@@ -649,8 +650,17 @@
           (lambda ()
             (when (string-equal "tsx" (file-name-extension buffer-file-name))
               (setup-tide-mode))))
+  (add-hook 'web-mode-hook
+          (lambda ()
+            (when (string-equal "jsx" (file-name-extension buffer-file-name))
+              (setup-tide-mode))))
 ;; enable typescript-tslint checker
   (flycheck-add-mode 'typescript-tslint 'web-mode))
+
+;; (defun my-web-mode-hook ()
+;;   (setq web-mode-enable-auto-pairing nil))
+
+;; (add-hook 'web-mode-hook  'my-web-mode-hook)
 
 (use-package ob-typescript
   :ensure t)
@@ -735,6 +745,7 @@
 ;;aktivoi uusi javascript moodi
 (add-hook 'js-mode-hook 'js2-minor-mode)
 (add-hook 'js2-mode-hook 'ac-js2-mode)
+(setq js-indent-level 2)
 
 ;;yhdistä dired bufferit ibufferissa
 (setq ibuffer-saved-filter-groups
@@ -816,27 +827,6 @@
     (message (buffer-file-name))
     (kill-new (buffer-file-name))))
 ;(desktop-save-mode 1) ;lataa aikaisemmat tiedostot
-
-(defun save-persistent-scratch ()
-  "Write the contents of *scratch* to the file name
-`persistent-scratch-file-name'."
-  (with-current-buffer (get-buffer-create "*scratch*")
-    (write-region (point-min) (point-max) "~/.emacs-persistent-scratch")))
-
-(defun load-persistent-scratch ()
-  "Load the contents of `persistent-scratch-file-name' into the
-  scratch buffer, clearing its contents first."
-  (if (file-exists-p "~/.emacs-persistent-scratch")
-      (with-current-buffer (get-buffer "*scratch*")
-        (delete-region (point-min) (point-max))
-        (insert-file-contents "~/.emacs-persistent-scratch"))))
-
-(push #'load-persistent-scratch after-init-hook)
-(push #'save-persistent-scratch kill-emacs-hook)
-
-(if (not (boundp 'save-persistent-scratch-timer))
-    (setq save-persistent-scratch-timer
-          (run-with-idle-timer 300 t 'save-persistent-scratch)))
 
 ;; define function to shutdown emacs server instance
 (defun server-shutdown ()
