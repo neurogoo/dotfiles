@@ -813,21 +813,16 @@
                                         ;(add-hook 'window-setup-hook 'on-after-init)
 
 (cond
- ((find-font (font-spec :name "Iosevka")) (set-face-attribute 'default nil
-                    :family "Iosevka" :height (if (eq system-type 'gnu/linux)
-                                                           130
-                                                         (if (eq system-type 'darwin)
-                                                             190)) :weight 'normal))
+ ((find-font (font-spec :name "Iosevka Nerd Font")) (set-face-attribute 'default nil
+                    :family "Iosevka Nerd Font" :height (if (eq system-type 'gnu/linux)
+                                                  130
+                                                (if (eq system-type 'darwin)
+                                                    190)) :weight 'normal))
  ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux)
                                                            130
                                                          (if (eq system-type 'darwin)
                                                              140)) :weight 'normal)))
-
-(defun my-web-mode-hook ()
-  (setq web-mode-enable-auto-pairing nil))
-
-(add-hook 'web-mode-hook  'my-web-mode-hook)
 
 ;;funktio tiedoston polun saamiseksi helposti
 (define-key global-map (kbd "\C-c w")
