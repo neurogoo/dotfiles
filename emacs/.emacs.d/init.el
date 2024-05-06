@@ -174,7 +174,10 @@
     :program "cabal-fmt")
   (reformatter-define edn-format
     :program "bb"
-    :args '("-e" "(-> *in* clojure.edn/read clojure.pprint/pprint)" "-i")))
+    :args '("-e" "(-> *in* clojure.edn/read clojure.pprint/pprint)" "-i"))
+  (reformatter-define json-to-edn-format
+    :program "bb"
+    :args '("-e" "(-> *in* slurp (cheshire.core/parse-string true) clojure.pprint/pprint)" "-i")))
 (use-package purescript-mode
   :ensure t)
 (use-package psc-ide
@@ -313,7 +316,8 @@
   :disabled t
   :ensure t)
 (use-package clj-refactor
-  :ensure t)
+  :ensure t
+  :defer t)
 (use-package cider
   :ensure t
   :defer t
@@ -437,9 +441,6 @@
              (:face font-lock-doc-face))))))
   (ivy-rich-mode 1)
   )
-(use-package restclient
-  :ensure t
-  :defer t)
 (use-package deft
   :ensure t
   :init
@@ -543,11 +544,14 @@
   :diminish yassnippet
   :config
   (yas-global-mode 1))
+(use-package verb
+  :ensure t)
 (use-package org
   :ensure t
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
   :config
+  (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   (setq org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
         org-hide-leading-stars t)
@@ -691,6 +695,12 @@
 (use-package yaml-mode
   :ensure t
   :mode "\\.yml\\'")
+
+(use-package hl-todo
+  :ensure t
+  :config
+  (global-hl-todo-mode))
+
 ;; active Org-babel languages
 (org-babel-do-load-languages
  'org-babel-load-languages
