@@ -28,12 +28,6 @@
   (paradox-execute-asynchronously t)
   :config
   (paradox-enable))
-(use-package org-roam
-  :ensure t
-  :hook
-  (after-init . org-roam-mode)
-  :custom
-  (org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/"))
 (use-package lean-mode
   :ensure t)
 (use-package company-lean
@@ -98,7 +92,9 @@
 (use-package popwin
   :ensure t)
 (use-package eldoc
-  :diminish eldoc-mode)
+  :diminish eldoc-mode
+  :config
+  (add-hook 'ielm-mode-hook 'eldoc-mode))
 (use-package winner
   :diminish winner-mode
   :config
@@ -163,6 +159,7 @@
   (add-hook 'scheme-mode-hook 'smartparens-strict-mode)
   (add-hook 'haskell-mode-hook 'smartparens-mode)
   (add-hook 'elm-mode-hook 'smartparens-mode)
+  (add-hook 'ielm-mode-hook 'smartparens-mode)
   :config
   (progn
     (require 'smartparens-config)
