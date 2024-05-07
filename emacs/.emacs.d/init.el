@@ -607,9 +607,6 @@
     (setq google-translate-output-destination nil)
     (setq google-translate-pop-up-buffer-set-focus t)
     (setq google-translate-translation-directions-alist '(("fi"."en")("en"."fi")))))
-(use-package ob-restclient
-  :defer t
-  :ensure t)
 (use-package json-mode
   :defer t
   :ensure t
@@ -706,9 +703,7 @@
   (ipython . t)
   (dot . t)
   (shell . t)
-  (typescript . t)
-  (restclient . t))
- )
+  (typescript . t)))
 
 (setq org-plantuml-jar-path
       (expand-file-name "~/Downloads/plantuml.jar"))
