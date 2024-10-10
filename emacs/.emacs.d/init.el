@@ -10,7 +10,33 @@
   )
 (when (>= emacs-major-version 26)
   (global-display-line-numbers-mode))
+
+(defun display-buffer-from-rg-p (_buffer-name _action)
+  (unless current-prefix-arg
+    (with-current-buffer (window-buffer)
+      (derived-mode-p 'rg-mode))))
+
+(defun display-buffer-from-clj-refactor (_buffer-name _action)
+  (unless current-prefix-arg
+    (with-current-buffer (window-buffer)
+      (equal (buffer-name) "*cljr-find-usages*"))))
+
+(push '(display-buffer-from-rg-p display-buffer-use-some-window) display-buffer-alist)
+(push '(display-buffer-from-clj-refactor display-buffer-use-some-window) display-buffer-alist)
+
+;;From Emacs docs, function that can be used with defadvice to trafe function call
+(defun his-tracing-function (orig-fun &rest args)
+  (message "display-buffer called with args %S" args)
+  (let ((res (apply orig-fun args)))
+    (message "display-buffer returned %S" res)
+    res))
+;(advice-add 'display-buffer :around #'his-tracing-function)
+;(advice-remove 'display-buffer #'his-tracing-function)
+
 (setq use-package-verbose t)
+
+;;Set build-in calendar week day starting with Monday
+(setq calendar-week-start-day 1)
 (require 'use-package)
 (setq backup-directory-alist '(("." . "~/.emacs.d/backup"))
     backup-by-copying t    ; Don't delink hardlinks
@@ -21,6 +47,34 @@
     )
 (setq auto-save-file-name-transforms
       '((".*" "~/.emacs.d/autosaves" t)))
+(use-package lua-mode
+  :ensure t)
+(use-package dirvish
+  :ensure t
+  :config
+  (dirvish-override-dired-mode))
+(use-package rg
+  :ensure t
+  :config
+  (rg-enable-menu)
+  ;next-error-follow-minor-mode
+  )
+(use-package ace-window
+  :ensure t
+  :bind ("M-o" . ace-window)
+  :config
+  (setq aw-dispatch-always t)
+  (ace-window-display-mode t))
+(use-package gnuplot
+  :ensure t)
+(use-package casual
+  :ensure t
+  :config
+  (define-key calc-mode-map (kbd "C-o") 'casual-main-menu))
+(use-package zoom
+  :ensure t
+  :config
+  (custom-set-variables '(zoom-size '(0.618 . 0.618))))
 (use-package paradox
   :ensure t
   :defer t
@@ -138,6 +192,24 @@
   :after (company)
   :init
   (add-to-list 'company-backends 'company-ghci))
+(use-package company-lua
+  :ensure t
+  :after (company)
+  :init
+  (setq company-lua-executable "/usr/local/bin/lua")
+  (add-to-list 'company-backends 'company-lua)
+  :config
+  (defun lua-funcname-at-point ()
+    "Get current Name { '.' Name } sequence."
+    (when (or (lua--funcname-char-p (char-before))
+              (lua--funcname-char-p (char-after)))
+      (save-excursion
+        (save-match-data
+          (re-search-backward "\\`\\|[^A-Za-z_.]")
+          ;; NOTE: `point' will be either at the start of the buffer or on a
+          ;; non-symbol character.
+          (re-search-forward "\\([A-Za-z_]+\\(?:\\.[A-Za-z_]*\\)*\\)")
+          (match-string-no-properties 1))))))
 (use-package company-jedi
   :disabled t
   :ensure t
@@ -160,6 +232,7 @@
   (add-hook 'haskell-mode-hook 'smartparens-mode)
   (add-hook 'elm-mode-hook 'smartparens-mode)
   (add-hook 'ielm-mode-hook 'smartparens-mode)
+  (add-hook 'ielm-mode-hook 'smartparens-strict-mode)
   :config
   (progn
     (require 'smartparens-config)
@@ -315,6 +388,9 @@
 (use-package clj-refactor
   :ensure t
   :defer t)
+;;For cider log view
+(use-package logview
+  :ensure t)
 (use-package cider
   :ensure t
   :defer t
@@ -324,7 +400,9 @@
   ;         (figwheel-sidecar.repl-api/start-figwheel!)
   ;         (figwheel-sidecar.repl-api/cljs-repl))")
   (add-hook 'cider-repl-mode-hook 'smartparens-strict-mode)
-  (add-hook 'cider-mode-hook 'eldoc-mode))
+  (add-hook 'cider-mode-hook 'eldoc-mode)
+  (setq cider-ns-code-reload-tool 'clj-reload)
+  (setq cider-redirect-server-output-to-repl nil))
 (use-package projectile
   :ensure t
   :diminish projectile-mode
@@ -445,9 +523,10 @@
     (setq deft-extension "org")
     (setq deft-directory "~/Workdocuments")
     (setq deft-use-filename-as-title t)))
-
 (use-package magit
   :ensure t
+  :config
+  (setq magit-repository-directories `(("~/dias" . 1)))
   :bind
   (("C-x g" . magit-status)))
 (use-package diff-hl
@@ -548,6 +627,7 @@
   :bind (("C-c c" . org-capture)
          ("C-c a" . org-agenda))
   :config
+  (require 'ox-md)
   (define-key org-mode-map (kbd "C-c C-r") verb-command-map)
   (setq org-refile-use-outline-path 'file
         org-outline-path-complete-in-steps nil
@@ -700,10 +780,11 @@
  'org-babel-load-languages
  '(;; other Babel languages
   (plantuml . t)
-  (ipython . t)
-  (dot . t)
+  (dot . t) ;graphviz
   (shell . t)
-  (typescript . t)))
+  (typescript . t)
+  (sql . t)
+  (python . t)))
 
 (setq org-plantuml-jar-path
       (expand-file-name "~/Downloads/plantuml.jar"))
@@ -717,6 +798,57 @@
 (add-to-list 'auto-mode-alist '("\\.[Cc][Ss][Vv]\\'" . csv-mode))
 (autoload 'csv-mode "csv-mode"
   "Major mode for editing comma-separated value files." t)
+
+(defcustom csv+-quoted-newline "\^@"
+  "Replace for newlines in quoted fields."
+  :group 'sv
+  :type 'string)
+
+(defun csv+-quoted-newlines (&optional b e inv)
+  "Replace newlines in quoted fields of region B E by `csv+-quoted-newline'.
+B and E default to `point-min' and `point-max', respectively.
+If INV is non-nil replace quoted `csv+-quoted-newline' chars by newlines."
+  (interactive
+   (append (when (region-active-p)
+         (list (region-begin)
+           (region-end)))
+       prefix-arg))
+  (unless b (setq b (point-min)))
+  (unless e (setq e (point-max)))
+  (save-excursion
+    (goto-char b)
+    (let ((from (if inv csv+-quoted-newline "\n"))
+      (to (if inv "\n" csv+-quoted-newline)))
+      (while (search-forward from e t)
+    (when (nth 3 (save-excursion (syntax-ppss (1- (point)))))
+      (replace-match to))))))
+
+(defsubst csv+-quoted-newlines-write-contents ()
+  "Inverse operation of `csv+-quoted-newlines' for the full buffer."
+  (save-excursion
+    (save-restriction
+      (widen)
+      (let ((file (buffer-file-name))
+        (contents (buffer-string)))
+    (with-temp-buffer
+      (insert contents)
+      (csv+-quoted-newlines (point-min) (point-max) t)
+      (write-region (point-min) (point-max) file)))))
+  (set-visited-file-modtime)
+  (set-buffer-modified-p nil)
+  t ;; File contents has been written (see `write-contents-functions').
+  )
+
+(defun csv+-setup-quoted-newlines ()
+  "Hook function for `csv-mode-hook'.
+Transform newlines in quoted fields to `csv+-quoted-newlines'
+when reading files and the other way around when writing contents."
+  (add-hook 'write-contents-functions #'csv+-quoted-newlines-write-contents t t)
+  (let ((modified-p (buffer-modified-p)))
+    (csv+-quoted-newlines)
+    (set-buffer-modified-p modified-p)))
+
+(add-hook 'csv-mode-hook #'csv+-setup-quoted-newlines)
 
 (if (daemonp)
     (progn
@@ -900,6 +1032,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(cider-enrich-classpath t)
+ '(company-lua-interpreter 'love)
  '(counsel-rg-base-command
    "rg -S -M 160 --no-heading --line-number --color never %s .")
  '(dante-methods-alist
@@ -916,38 +1050,50 @@
                           (or dante-target "")
                           " --builddir=dist/dante")))
      (nix-ghci
-      #[257 "\300\301\302#\207"
+      #[257 "\300\1\301\302#\207"
             [directory-files t "shell.nix\\|default.nix"]
-            5 "
-
-(fn D)"]
+            5 "\12\12(fn D)"]
       ("nix-shell" "--pure" "--run" "ghci"))
      (mafia "mafia"
             ("mafia" "repl" dante-target))
      (bare-cabal
-      #[257 "\300\301\302#\207"
+      #[257 "\300\1\301\302#\207"
             [directory-files t ".cabal$"]
-            5 "
-
-(fn D)"]
+            5 "\12\12(fn D)"]
       ("cabal" "new-repl" dante-target "--builddir=dist/dante"))
      (bare-ghci
       #[257 "\300\207"
             [t]
-            2 "
-
-(fn _)"]
+            2 "\12\12(fn _)"]
       ("ghci"))))
  '(haskell-stylish-on-save t)
  '(idris-interpreter-path "idris2")
  '(lsp-enable-snippet nil)
- '(lsp-file-watch-ignored
+ '(lsp-file-watch-ignored-directories
    '("[/\\\\]\\.git$" "[/\\\\]\\.hg$" "[/\\\\]\\.bzr$" "[/\\\\]_darcs$" "[/\\\\]\\.svn$" "[/\\\\]_FOSSIL_$" "[/\\\\]\\.idea$" "[/\\\\]\\.ensime_cache$" "[/\\\\]\\.eunit$" "[/\\\\]node_modules$" "[/\\\\]\\.fslckout$" "[/\\\\]\\.tox$" "[/\\\\]dist$" "[/\\\\]dist-newstyle$" "[/\\\\]\\.stack-work$" "[/\\\\]\\.bloop$" "[/\\\\]\\.metals$" "[/\\\\]target$" "[/\\\\]\\.ccls-cache$" "[/\\\\]\\.vscode$" "[/\\\\]\\.deps$" "[/\\\\]build-aux$" "[/\\\\]autom4te.cache$" "[/\\\\]\\.reference$" "[/\\\\]\\vendor$" "[/\\\\]\\dist-newstyle$"))
  '(lsp-haskell-formatting-provider "stylish-haskell")
+ '(lua-default-application "love")
+ '(magit-repolist-columns
+   '(("Name" 25 magit-repolist-column-ident nil)
+     ("Branch" 25 magit-repolist-column-branch nil)
+     ("Version" 25 magit-repolist-column-version
+      ((:sort magit-repolist-version<)))
+     ("B<U" 3 magit-repolist-column-unpulled-from-upstream
+      ((:right-align t)
+       (:sort <)))
+     ("B>U" 3 magit-repolist-column-unpushed-to-upstream
+      ((:right-align t)
+       (:sort <)))
+     ("Path" 99 magit-repolist-column-path nil)))
+ '(org-agenda-files '("~/Workdocuments/timetracking.org"))
  '(org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/")
  '(package-selected-packages
-   '(tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
+   '(prodigy zoom gnuplot logview casual verb uiua-ts-mode 0blayout compat hl-todo rg dirvish company-lua lua-mode yaml-mode rustic clj-refactor kibit-helper envrc flycheck-clj-kondo tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
  '(paradox-execute-asynchronously t t)
  '(paradox-github-token t)
  '(projectile-globally-ignored-directories
-   '("Z_dependencies" ".idea" ".vscode" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache" ".clangd" "vendor")))
+   '("Z_dependencies" ".idea" ".vscode" ".ensime_cache" ".eunit" ".git" ".hg" ".fslckout" "_FOSSIL_" ".bzr" "_darcs" ".tox" ".svn" ".stack-work" ".ccls-cache" ".clangd" "vendor"))
+ '(zoom-size '(0.618 . 0.618)))
+
+(put 'narrow-to-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
