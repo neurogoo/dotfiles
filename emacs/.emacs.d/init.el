@@ -67,10 +67,15 @@
   (ace-window-display-mode t))
 (use-package gnuplot
   :ensure t)
-(use-package casual
+(use-package casual-calc
   :ensure t
-  :config
-  (define-key calc-mode-map (kbd "C-o") 'casual-main-menu))
+  :bind (:map
+         calc-mode-map
+         ("C-o" . casual-calc-tmenu)
+         :map
+         calc-alg-map
+         ("C-o" . casual-calc-tmenu))
+  :after (calc))
 (use-package zoom
   :ensure t
   :config
@@ -1088,7 +1093,7 @@ when reading files and the other way around when writing contents."
  '(org-agenda-files '("~/Workdocuments/timetracking.org"))
  '(org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/")
  '(package-selected-packages
-   '(prodigy zoom gnuplot logview casual verb uiua-ts-mode 0blayout compat hl-todo rg dirvish company-lua lua-mode yaml-mode rustic clj-refactor kibit-helper envrc flycheck-clj-kondo tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
+   '(casual-calc prodigy zoom gnuplot logview casual verb uiua-ts-mode 0blayout compat hl-todo rg dirvish company-lua lua-mode yaml-mode rustic clj-refactor kibit-helper envrc flycheck-clj-kondo tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
  '(paradox-execute-asynchronously t t)
  '(paradox-github-token t)
  '(projectile-globally-ignored-directories
