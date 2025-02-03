@@ -253,21 +253,7 @@
   (reformatter-define json-to-edn-format
     :program "bb"
     :args '("-e" "(-> *in* slurp (cheshire.core/parse-string true) clojure.pprint/pprint)" "-i")))
-(use-package purescript-mode
-  :ensure t)
-(use-package psc-ide
-  :ensure t
-  :config
-  (add-hook 'purescript-mode-hook
-            (lambda ()
-              (psc-ide-mode)
-              (company-mode)
-              (flycheck-mode)
-              (turn-on-purescript-indentation))))
-(defun my-run-psc-ide-server ()
-  (psc-ide-server-start-impl "/Users/toku/Purescript/euler1")
-  ;; After 1 second we send a load all command
-  (run-at-time "1 sec" nil 'psc-ide-load-all))
+
 (if (eq system-type 'darwin)
     (setq ispell-program-name "/opt/homebrew/bin/aspell"))
 (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell)
