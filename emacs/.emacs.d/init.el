@@ -269,7 +269,7 @@
   ;; After 1 second we send a load all command
   (run-at-time "1 sec" nil 'psc-ide-load-all))
 (if (eq system-type 'darwin)
-    (setq ispell-program-name "/usr/local/bin/aspell"))
+    (setq ispell-program-name "/opt/homebrew/bin/aspell"))
 (add-hook 'git-commit-setup-hook 'git-commit-turn-on-flyspell)
 (use-package nerd-icons
   :ensure t
@@ -534,6 +534,10 @@
   (setq magit-repository-directories `(("~/dias" . 1)))
   :bind
   (("C-x g" . magit-status)))
+(use-package magit-todos
+  :ensure t
+  :after magit
+  :config (magit-todos-mode 1))
 (use-package diff-hl
   :ensure t
   :config
@@ -1071,6 +1075,7 @@ when reading files and the other way around when writing contents."
             [t]
             2 "\12\12(fn _)"]
       ("ghci"))))
+ '(dictionary-server "dict.org")
  '(haskell-stylish-on-save t)
  '(idris-interpreter-path "idris2")
  '(lsp-enable-snippet nil)
