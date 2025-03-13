@@ -932,11 +932,14 @@ when reading files and the other way around when writing contents."
                                         ;(add-hook 'window-setup-hook 'on-after-init)
 
 (cond
- ((find-font (font-spec :name "Iosevka Nerd Font")) (set-face-attribute 'default nil
-                    :family "Iosevka Nerd Font" :height (if (eq system-type 'gnu/linux)
-                                                  130
-                                                (if (eq system-type 'darwin)
-                                                    190)) :weight 'normal))
+ ((find-font (font-spec :name "Iosevka Nerd Font"))
+  (set-face-attribute 'default nil
+                      :family "Iosevka Nerd Font"
+                      :height (if (eq system-type 'gnu/linux)
+                                  130
+                                (if (eq system-type 'darwin)
+                                    180))
+                      :weight 'normal))
  ((set-face-attribute 'default nil
                     :family "DejaVu Sans Mono" :height (if (eq system-type 'gnu/linux)
                                                            130
@@ -1009,6 +1012,9 @@ when reading files and the other way around when writing contents."
   (set-face-foreground 'linum "#4C566A")
   (set-face-background 'linum nil)
   (setq linum-format 'linum-highlight-current-line-number))
+
+(use-package gptel
+  :ensure t)
 ;;Should be kept as a last thing because of initialization stuff
 (use-package envrc
   :ensure t
@@ -1084,7 +1090,7 @@ when reading files and the other way around when writing contents."
  '(org-agenda-files '("~/Workdocuments/timetracking.org"))
  '(org-roam-directory "/Users/toni.okuogume@futurice.com/org-roam-docs/")
  '(package-selected-packages
-   '(casual-calc prodigy zoom gnuplot logview casual verb uiua-ts-mode 0blayout compat hl-todo rg dirvish company-lua lua-mode yaml-mode rustic clj-refactor kibit-helper envrc flycheck-clj-kondo tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
+   '(gptel magit-todos casual-calc prodigy zoom gnuplot logview casual verb uiua-ts-mode 0blayout compat hl-todo rg dirvish company-lua lua-mode yaml-mode rustic clj-refactor kibit-helper envrc flycheck-clj-kondo tree-sitter-langs tree-sitter web-mode prettier company-lean lean-mode lean dockerfile-mode lsp-python-ms org-roam vue-mode csv-mode esup paradox all-the-icons-ivy elm-mode org-tree-slide reformatter doom-themes doom-modeline all-the-icons ws-butler eyebrowse htmlize ox-reveal popwin purescript-mode psc-ide idris-mode tide company-jedi git-gutter diminish which-key use-package treemacs smex smartparens rainbow-delimiters racket-mode racer pydoc-info powerline ox-pandoc org-present ob-ipython nose moe-theme meghanada markdown-mode magit ledger-mode json-mode js2-mode geiser flycheck-rust flycheck-plantuml flx exec-path-from-shell elfeed-org dumb-jump deft dante counsel-projectile company-ghci company-anaconda cider cargo))
  '(paradox-execute-asynchronously t t)
  '(paradox-github-token t)
  '(projectile-globally-ignored-directories
