@@ -740,14 +740,6 @@
 (use-package idris-mode
   :mode "\\.idr\\'"
   :ensure t)
-(use-package meghanada
-  :defer t
-  :ensure t
-  :init
-  ;; Don't auto-start
-  (setq meghanada-auto-start nil)
-  (add-hook 'java-mode-hook #'meghanada-mode)
-  (add-hook 'java-mode-hook 'flycheck-mode))
 (use-package dumb-jump
   :ensure t)
 (use-package flycheck-clj-kondo
